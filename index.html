@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>EDACE 765 - Gamification + Artificial Intelligence</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f4f6f8;color:#172536;font-family:Arial,Helvetica,sans-serif}
+.shell{max-width:1040px;margin:0 auto;padding:18px 14px 40px}
+.hero{background:#243b55;color:#fff;border-radius:12px;padding:24px 26px;box-shadow:0 5px 18px rgba(23,37,54,.16)}
+.hero h1{margin:0;font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.15}.hero .meta{margin-top:8px;opacity:.9;font-size:.9rem}
+.focus-box{margin:14px 0 16px;padding:16px 18px;background:#fff;border:1px solid #cad3df;border-radius:10px}
+.focus-kicker,.system-kicker,.lab-kicker,.final-kicker{color:#8a5a00;font-size:.75rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.focus-box h2{margin:4px 0 6px;font-size:1.35rem}.focus-box p{margin:0;color:#526273;line-height:1.5}
+.menu-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 24px}
+.menu-card{appearance:none;width:100%;min-height:142px;padding:14px 10px;border:1px solid #cad3df;border-top:5px solid var(--accent);border-radius:11px;background:#fff;box-shadow:0 3px 10px rgba(23,37,54,.08);cursor:pointer;text-align:center;transition:.14s;color:#172536}
+.menu-card:hover,.menu-card:focus-visible{transform:translateY(-2px);box-shadow:0 7px 18px rgba(23,37,54,.14);outline:3px solid rgba(185,120,0,.18);outline-offset:2px}
+.menu-icon{display:block;font-size:2rem;line-height:1;margin-bottom:8px}.menu-number{display:block;color:#7a8794;font-size:.66rem;font-weight:900;letter-spacing:.11em;margin-bottom:4px}
+.menu-title{display:block;color:#243b55;font-weight:900;line-height:1.15;font-size:.94rem}.menu-subtitle{display:block;color:#687887;font-size:.72rem;line-height:1.25;margin-top:5px}
+.play-me{display:inline-block;margin-top:8px;padding:3px 7px;border-radius:999px;background:#172536;color:#fff;font-size:.62rem;font-weight:900;letter-spacing:.08em}
+#sticky-progress{position:sticky;top:0;z-index:9999;display:none;background:rgba(244,246,248,.96);backdrop-filter:blur(8px);padding:8px 0 7px;margin-bottom:8px}
+.progress-meta{display:flex;justify-content:space-between;gap:10px;font-size:.74rem;font-weight:800;color:#526273;margin-bottom:5px}
+#progress-track{height:8px;background:#d8e0e8;border-radius:999px;overflow:hidden}#progress-fill{width:0;height:100%;background:#243b55;border-radius:999px;transition:width .08s linear}
+.content-panel{background:#fff;border:1px solid #d6dee7;border-radius:12px;padding:16px;box-shadow:0 5px 16px rgba(23,37,54,.08)}.content-panel[hidden]{display:none!important}
+.section-banner{display:flex;align-items:center;gap:18px;padding:22px 24px;margin:0 0 14px;color:#fff;background:linear-gradient(135deg,#172536,var(--accent));border-radius:10px}
+.section-icon{font-size:3.6rem;line-height:1;min-width:66px;text-align:center}.section-kicker{font-size:.74rem;font-weight:900;letter-spacing:.12em;opacity:.85}
+.section-title{font-size:1.45rem;font-weight:900;line-height:1.15;margin-top:4px}.section-subtitle{font-size:.9rem;opacity:.92;margin-top:5px}
+.banner-easter{display:inline-block;margin-top:9px;padding:4px 8px;border:1px solid rgba(255,255,255,.5);border-radius:999px;font-size:.68rem;font-weight:900;letter-spacing:.08em}
+.acdc-flair{margin:0 0 14px;line-height:1.65;color:#243447;font-style:italic;font-weight:700}
+.panel-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0 18px;align-items:center}.bottom-nav{margin:26px 0 4px}
+.nav-btn{appearance:none;border:1px solid #cad3df;border-radius:8px;background:#f8fafc;color:#2c5275;padding:10px 12px;font-weight:800;cursor:pointer;text-align:center}.home-btn{background:#243b55;color:#fff;border-color:#243b55}
+.section-content{overflow-wrap:anywhere}.section-content img{max-width:100%;height:auto}.section-content table{max-width:100%}
+.system-notice{padding:18px 20px;border:1px solid #d6dee7;border-left:6px solid #b97800;border-radius:10px;background:#fffaf0;margin:14px 0}
+.system-title{font-size:1.15rem;font-weight:900;color:#243b55;margin:5px 0}.system-notice p{line-height:1.55;margin:8px 0}
+.scoreboard{display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;align-items:center;padding:16px 18px;background:#172536;color:#fff;border-radius:10px;margin:16px 0 12px}
+.score-label{font-size:.68rem;font-weight:900;letter-spacing:.11em;opacity:.75}.score-number{font-size:1.55rem;font-weight:900;margin-top:2px}
+.score-scale{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;font-size:.78rem}.score-scale span{background:rgba(255,255,255,.12);padding:5px 8px;border-radius:999px}
+.activity-rule{padding:11px 14px;background:#f8fafc;border:1px solid #d6dee7;border-radius:8px;color:#526273;font-size:.9rem;margin-bottom:20px}
+.lab{margin:24px 0 34px}.lab-header{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;padding-bottom:10px;border-bottom:2px solid #d6dee7}
+.lab-header h3{margin:3px 0 0;color:#243b55;font-size:1.35rem}.lab-progress{min-width:190px;font-size:.78rem;font-weight:800;color:#526273}
+.mini-track{height:8px;background:#d8e0e8;border-radius:999px;overflow:hidden;margin-top:5px}.mini-fill{height:100%;background:#b97800;border-radius:999px}
+.question-card{margin:18px 0;padding:18px;border:1px solid #d6dee7;border-radius:10px;background:#fff;box-shadow:0 2px 8px rgba(23,37,54,.05)}
+.question-number{font-size:.7rem;font-weight:900;letter-spacing:.1em;color:#8a5a00}.question-card h4{font-size:1.1rem;color:#243b55;margin:14px 0 10px}.question-card p,.question-card li{line-height:1.55}
+.answer-grid{display:grid;gap:9px;margin-top:12px}.answer-btn{appearance:none;width:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;padding:13px 14px;border:1px solid #cad3df;border-radius:9px;background:#f8fafc;color:#172536;cursor:pointer;font-size:.92rem;line-height:1.4}
+.answer-btn:hover,.answer-btn:focus-visible{border-color:#546a91;background:#f2f6fb;outline:2px solid rgba(84,106,145,.2)}.answer-btn.selected{border:2px solid #243b55;background:#eef3f8}
+.answer-letter{flex:0 0 28px;height:28px;border-radius:50%;background:#243b55;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900}
+.feedback-box{margin-top:12px;padding:14px 15px;border-radius:9px;background:#f8fafc;border-left:5px solid #546a91}.feedback-box[hidden]{display:none!important}
+.feedback-score{font-size:.74rem;font-weight:900;letter-spacing:.08em;margin-bottom:6px}.feedback-score.good{color:#237343}.feedback-score.mid{color:#8a5a00}.feedback-score.low{color:#8b2f2f}
+.system-alert,.vendor-claim{display:inline-block;padding:6px 9px;background:#172536;color:#fff;border-radius:6px;font-size:.75rem;font-weight:900;letter-spacing:.06em;margin:10px 0}
+.lab-achievement{margin:18px 0;padding:18px 20px;border:2px solid #b97800;border-radius:10px;background:#fff8e8}.lab-achievement[hidden]{display:none!important}
+.achievement-kicker{font-size:.72rem;font-weight:900;letter-spacing:.11em;color:#8a5a00}.achievement-title{font-size:1.12rem;font-weight:900;color:#243b55;margin:4px 0}.achievement-copy,.achievement-reward{line-height:1.5}.achievement-reward{font-style:italic;color:#526273;margin-top:4px}
+.final-score-card{padding:20px;background:#243b55;color:#fff;border-radius:11px;text-align:center;margin:28px 0 18px}.final-score-card.achievement-reveal{animation:achievementReveal .42s ease-out}.final-kicker{color:#f0c36b;font-weight:900;letter-spacing:.09em}.final-score{font-size:2.1rem;font-weight:900;margin:4px 0}.final-title{font-size:1.28rem;font-weight:900;margin-top:4px}.final-copy{line-height:1.5;opacity:.94;margin-top:9px}.final-reward{margin:13px auto 0;max-width:720px;padding:10px 13px;border:1px solid rgba(240,195,107,.55);border-radius:8px;background:rgba(255,255,255,.08);line-height:1.5;color:#fff}.final-reward strong{color:#f0c36b}@keyframes achievementReveal{from{opacity:.35;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.last-question{padding:20px;border-radius:10px;background:#fffaf0;border:1px solid #e4cf9b;margin:18px 0}.last-question[hidden]{display:none!important}.last-question h3{margin:4px 0 10px;color:#243b55}
+.who-made-who{text-align:center;font-size:1.4rem;font-weight:900;color:#243b55;margin-top:14px}.takeaway-callout{margin:20px 0;padding:16px 18px;background:#eef3f8;border-left:6px solid #243b55;border-radius:8px;line-height:1.55}
+.screen-note{margin-top:12px;text-align:center;font-size:.78rem;color:#687887}
+@media(max-width:800px){.menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.scoreboard{grid-template-columns:1fr 1fr}.score-scale{grid-column:1/-1;justify-content:flex-start}}
+@media(max-width:480px){.menu-grid{grid-template-columns:1fr}.panel-nav{grid-template-columns:1fr}.panel-nav span:empty{display:none}.section-banner{align-items:flex-start}.scoreboard{grid-template-columns:1fr}.score-scale{grid-column:auto}.lab-header{display:block}.lab-progress{margin-top:10px;min-width:0}}
+
+#scroll-top-btn{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:10000;
+  display:none;
+  appearance:none;
+  border:0;
+  border-radius:999px;
+  padding:11px 14px;
+  background:#243b55;
+  color:#fff;
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.06em;
+  box-shadow:0 6px 18px rgba(23,37,54,.22);
+  cursor:pointer;
+  transition:transform .14s ease, box-shadow .14s ease, opacity .14s ease;
+}
+#scroll-top-btn:hover,
+#scroll-top-btn:focus-visible{
+  transform:translateY(-2px);
+  box-shadow:0 9px 22px rgba(23,37,54,.28);
+  outline:3px solid rgba(185,120,0,.22);
+  outline-offset:2px;
+}
+#scroll-top-btn .top-arrow{
+  font-size:1rem;
+  margin-right:5px;
+}
+@media(max-width:480px){
+  #scroll-top-btn{
+    right:14px;
+    bottom:14px;
+    padding:10px 12px;
+  }
+}
+
+
+.locked-question[hidden]{display:none!important}
+.question-card.revealed{
+  animation:revealQuestion .28s ease-out;
+}
+@keyframes revealQuestion{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.next-unlocked{
+  margin:12px 0 0;
+  padding:9px 12px;
+  border-radius:8px;
+  background:#eef3f8;
+  color:#243b55;
+  font-size:.82rem;
+  font-weight:800;
+}
+
+
+.response-slot{
+  margin-top:12px;
+}
+.response-slot:empty{
+  display:none;
+}
+.feedback-box{
+  margin-top:0;
+}
+
+
+.lab-stage[hidden]{display:none!important}
+.lab-stage.active-lab{display:block}
+.lab-continue{
+  margin:20px 0 4px;
+  padding:14px;
+  border-top:1px solid #d6dee7;
+  text-align:right;
+}
+.lab-continue[hidden]{display:none!important}
+.continue-btn{
+  appearance:none;
+  border:0;
+  border-radius:9px;
+  background:#243b55;
+  color:#fff;
+  padding:12px 16px;
+  font-size:.9rem;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(23,37,54,.16);
+}
+.continue-btn:hover,.continue-btn:focus-visible{
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(23,37,54,.22);
+  outline:3px solid rgba(185,120,0,.2);
+  outline-offset:2px;
+}
+.final-unlocked{
+  display:inline-block;
+  padding:10px 13px;
+  border-radius:8px;
+  background:#eef3f8;
+  color:#243b55;
+  font-size:.86rem;
+  font-weight:800;
+}
+
+.final-score-card[hidden]{display:none!important}
+
+/* One-decision-at-a-time focus mode */
+.question-stage[hidden]{display:none!important}
+.question-stage.active-question{display:block}
+.question-next-wrap{
+  margin:16px 0 2px;
+  padding-top:14px;
+  border-top:1px solid #d6dee7;
+  text-align:right;
+}
+.question-next-btn{
+  appearance:none;
+  border:0;
+  border-radius:9px;
+  background:#243b55;
+  color:#fff;
+  padding:12px 17px;
+  font-size:.9rem;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(23,37,54,.16);
+}
+.question-next-btn:hover,
+.question-next-btn:focus-visible{
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(23,37,54,.22);
+  outline:3px solid rgba(185,120,0,.2);
+  outline-offset:2px;
+}
+#panel-try-it-yourself .scoreboard{
+  position:sticky;
+  top:48px;
+  z-index:80;
+  box-shadow:0 6px 18px rgba(23,37,54,.18);
+}
+@media(max-width:800px){
+  #panel-try-it-yourself .scoreboard{top:46px}
+}
+
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="hero" id="top">
+<h1>Gamification + Artificial Intelligence in Adult Learning and Training</h1>
+<div class="meta">EDACE 765 | Group 4</div>
+<div class="meta">Richard · Anna · Honey · Lauren</div>
+</div>
+<div id="landing">
+<div class="focus-box">
+<div class="focus-kicker">FOCUS MODE</div>
+<h2>Choose your path</h2>
+<p>Everything else stays hidden until you choose it. Four buttons across, two rows. One section at a time.</p>
+</div>
+<div class="menu-grid">
+<button aria-controls="panel-executive-summary" class="menu-card" data-target="executive-summary" id="btn-executive-summary" style="--accent:#8a5a00;">
+<span aria-hidden="true" class="menu-icon">📌</span>
+<span class="menu-number">01</span>
+<span class="menu-title">Executive Summary</span>
+<span class="menu-subtitle">The argument in two minutes</span>
+</button>
+<button aria-controls="panel-welcome" class="menu-card" data-target="welcome" id="btn-welcome" style="--accent:#b97800;">
+<span aria-hidden="true" class="menu-icon">❓</span>
+<span class="menu-number">02</span>
+<span class="menu-title">The Big Question</span>
+<span class="menu-subtitle">What is adapting to whom?</span>
+</button>
+<button aria-controls="panel-gamification-before-ai" class="menu-card" data-target="gamification-before-ai" id="btn-gamification-before-ai" style="--accent:#243b55;">
+<span aria-hidden="true" class="menu-icon">⚡</span>
+<span class="menu-number">03</span>
+<span class="menu-title">Who Made Who?</span>
+<span class="menu-subtitle">Richard | the machine we built</span>
+
+</button>
+<button aria-controls="panel-when-the-system-learns-the-learner" class="menu-card" data-target="when-the-system-learns-the-learner" id="btn-when-the-system-learns-the-learner" style="--accent:#546a91;">
+<span aria-hidden="true" class="menu-icon">🧠</span>
+<span class="menu-number">04</span>
+<span class="menu-title">When the System Learns</span>
+<span class="menu-subtitle">Anna | adaptation &amp; prediction</span>
+</button>
+<button aria-controls="panel-the-adult-learner-in-the-loop" class="menu-card" data-target="the-adult-learner-in-the-loop" id="btn-the-adult-learner-in-the-loop" style="--accent:#6b5f87;">
+<span aria-hidden="true" class="menu-icon">🎯</span>
+<span class="menu-number">05</span>
+<span class="menu-title">Adult Learner in the Loop</span>
+<span class="menu-subtitle">Honey | andragogy &amp; agency</span>
+</button>
+<button aria-controls="panel-the-benefits-risks--real-world-test" class="menu-card" data-target="the-benefits-risks--real-world-test" id="btn-the-benefits-risks--real-world-test" style="--accent:#237343;">
+<span aria-hidden="true" class="menu-icon">⚖️</span>
+<span class="menu-number">06</span>
+<span class="menu-title">Benefits, Risks &amp; Test</span>
+<span class="menu-subtitle">Lauren | adoption framework</span>
+</button>
+<button aria-controls="panel-try-it-yourself" class="menu-card" data-target="try-it-yourself" id="btn-try-it-yourself" style="--accent:#b97800;">
+<span aria-hidden="true" class="menu-icon">🕹️</span>
+<span class="menu-number">07</span>
+<span class="menu-title">Choose Your Own Adventure</span>
+<span class="menu-subtitle">Six decisions. Twelve possible Insight Points.</span>
+<span class="play-me">▶ PLAY ME</span></button>
+<button aria-controls="panel-references" class="menu-card" data-target="references" id="btn-references" style="--accent:#546a91;">
+<span aria-hidden="true" class="menu-icon">📚</span>
+<span class="menu-number">08</span>
+<span class="menu-title">References</span>
+<span class="menu-subtitle">Audited source base</span>
+</button></div>
+</div>
+<div aria-hidden="true" id="sticky-progress">
+<div class="progress-meta"><span id="progress-label">Section</span><span id="progress-percent">0%</span></div>
+<div id="progress-track"><div id="progress-fill"></div></div>
+</div>
+<main id="content-area">
+<section class="content-panel" data-section="executive-summary" hidden="" id="panel-executive-summary">
+<div class="section-banner" style="--accent:#8a5a00;">
+<div aria-hidden="true" class="section-icon">📌</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 1 OF 8</div>
+<div class="section-title">Executive Summary</div>
+<div class="section-subtitle">The argument in two minutes</div>
+</div>
+</div>
+<div class="panel-nav"><span></span><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="welcome">Next →</button></div>
+<div class="section-content"><h2 id="executive-summary" style="margin:28px 0 0;padding:0;color:#172536;font-size:1.55em;line-height:1.25;">Executive Summary</h2><div style="border:1px solid #cad3df;border-top:5px solid #243b55;border-radius:8px;padding:20px 22px;margin:12px 0 28px;background:#f8fafc;">
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">AI can help a gamified learning system adjust practice, feedback, and content to individual learners. That makes it worth considering for adult education, where learners bring different experience, responsibilities, and goals. It does not establish that an AI system teaches better than a well-designed alternative.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Our recommendation is conditional adoption: begin with a clear learning need, test the added value of AI, and keep learners involved in consequential decisions. Using andragogy and self-directed learning as our two foundations, we examine four connected issues: personalization and learning; agency and dependence; privacy and transparency; and equity and access. Research supports the potential of gamification, but evidence about gamification alone cannot establish the additional benefit of AI. We use three examples in different ways: Duolingo's Birdbrain as a documented platform feature, the Army's after-action review as a design pattern we adapt for AI, and one learner's reported experience using Claude to study anatomy.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The practical test is whether learners gain useful capability while retaining meaningful influence over their learning. A system that produces more clicks has answered a different question.</p>
+</div></div>
+<div class="panel-nav bottom-nav"><span></span><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="welcome">Next →</button></div>
+</section>
+<section class="content-panel" data-section="welcome" hidden="" id="panel-welcome">
+<div class="section-banner" style="--accent:#b97800;">
+<div aria-hidden="true" class="section-icon">❓</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 2 OF 8</div>
+<div class="section-title">The Big Question</div>
+<div class="section-subtitle">What is adapting to whom?</div>
+</div>
+</div>
+<div class="panel-nav"><button class="nav-btn" data-target="executive-summary">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="gamification-before-ai">Next →</button></div>
+<div class="section-content"><h2 id="welcome" style="margin:42px 0 18px;padding:12px 16px;border-left:6px solid #546a91;background:#eef2f8;color:#172536;font-size:1.65em;line-height:1.25;">Welcome</h2>
+<p style="font-size:1.15em;font-weight:bold;line-height:1.55;background:#fff7e8;border-left:6px solid #b97800;padding:16px 18px;margin:8px 0 18px;color:#3d3425;">When does incorporating artificial intelligence overcome the limitations of gamification in adult learning, enhance its advantages, or introduce new risks?</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">That is the question behind this wiki. Richard starts with what gamification already does. Anna examines what AI changes. Honey asks where the adult learner sits in those decisions. Lauren tests whether the benefits justify the costs and risks.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">As you read, keep another question in mind: <strong>Is the system adapting to the learner, or is the learner gradually being adapted by the system?</strong></p>
+<h3 id="contents" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;"><span aria-hidden="true">🗺️</span> Journey Map</h3>
+<div aria-label="Wiki contents" role="navigation" style="display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 18px;">
+<button data-target="gamification-before-ai" style="appearance:none;font:inherit;cursor:pointer;box-sizing:border-box;flex:1 1 280px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8fafc;border:1px solid #cad3df;border-left:5px solid #243b55;border-radius:8px;text-decoration:none;color:#172536;" type="button">
+<span aria-hidden="true" style="font-size:1.55em;line-height:1;">⚙️</span><span><strong style="color:#243b55;">1. Gamification Before AI</strong><br/><span style="font-size:.84em;color:#526273;">Richard | The machine we built</span></span>
+</button>
+<button data-target="when-the-system-learns-the-learner" style="appearance:none;font:inherit;cursor:pointer;box-sizing:border-box;flex:1 1 280px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8fafc;border:1px solid #cad3df;border-left:5px solid #546a91;border-radius:8px;text-decoration:none;color:#172536;" type="button">
+<span aria-hidden="true" style="font-size:1.55em;line-height:1;">🧠</span><span><strong style="color:#243b55;">2. When the System Learns</strong><br/><span style="font-size:.84em;color:#526273;">Anna | Adaptation and prediction</span></span>
+</button>
+<button data-target="the-adult-learner-in-the-loop" style="appearance:none;font:inherit;cursor:pointer;box-sizing:border-box;flex:1 1 280px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8fafc;border:1px solid #cad3df;border-left:5px solid #6b5f87;border-radius:8px;text-decoration:none;color:#172536;" type="button">
+<span aria-hidden="true" style="font-size:1.55em;line-height:1;">🎯</span><span><strong style="color:#243b55;">3. Adult Learner in the Loop</strong><br/><span style="font-size:.84em;color:#526273;">Honey | Andragogy and agency</span></span>
+</button>
+<button data-target="the-benefits-risks--real-world-test" style="appearance:none;font:inherit;cursor:pointer;box-sizing:border-box;flex:1 1 280px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8fafc;border:1px solid #cad3df;border-left:5px solid #237343;border-radius:8px;text-decoration:none;color:#172536;" type="button">
+<span aria-hidden="true" style="font-size:1.55em;line-height:1;">⚖️</span><span><strong style="color:#243b55;">4. Benefits, Risks &amp; Test</strong><br/><span style="font-size:.84em;color:#526273;">Lauren | Adoption framework</span></span>
+</button>
+<button data-target="try-it-yourself" style="appearance:none;font:inherit;cursor:pointer;box-sizing:border-box;flex:1 1 280px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fffaf0;border:1px solid #e1c88f;border-left:5px solid #b97800;border-radius:8px;text-decoration:none;color:#172536;" type="button">
+<span aria-hidden="true" style="font-size:1.55em;line-height:1;">🕹️</span><span><strong style="color:#8a5a00;">Try It Yourself</strong><br/><span style="font-size:.84em;color:#665c4a;">3 interactive decision labs</span></span>
+</button>
+<button data-target="references" style="appearance:none;font:inherit;cursor:pointer;box-sizing:border-box;flex:1 1 280px;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8fafc;border:1px solid #cad3df;border-left:5px solid #75879a;border-radius:8px;text-decoration:none;color:#172536;" type="button">
+<span aria-hidden="true" style="font-size:1.55em;line-height:1;">📚</span><span><strong style="color:#243b55;">References</strong><br/><span style="font-size:.84em;color:#526273;">Audited literature base</span></span>
+</button>
+</div>
+<div style="background:#172536;color:#ffffff;border-radius:8px;padding:12px 16px;margin:0 0 28px;">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px;font-size:.88em;font-weight:bold;"><span><span aria-hidden="true">🧭</span> Four-part reading path</span><span>1 → 2 → 3 → 4</span></div>
+<div aria-label="Four equal sections in the reading path" style="display:flex;width:100%;height:9px;border-radius:5px;overflow:hidden;background:#cad3df;"><span style="width:25%;background:#b97800;"></span><span style="width:25%;background:#546a91;"></span><span style="width:25%;background:#6b5f87;"></span><span style="width:25%;background:#237343;"></span></div>
+<p style="margin:8px 0 0;color:#e7edf3;font-size:.82em;line-height:1.45;">This map shows document structure, not tracked completion. Canvas is not measuring whether you actually read a section.</p>
+</div></div>
+<div class="panel-nav bottom-nav"><button class="nav-btn" data-target="executive-summary">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="gamification-before-ai">Next →</button></div>
+</section>
+<section class="content-panel" data-section="gamification-before-ai" hidden="" id="panel-gamification-before-ai">
+<div class="section-banner" style="--accent:#243b55;">
+<div aria-hidden="true" class="section-icon">⚡</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 3 OF 8</div>
+<div class="section-title">Who Made Who?</div>
+<div class="section-subtitle">Richard | the machine we built</div>
+
+</div>
+</div>
+<div class="panel-nav"><button class="nav-btn" data-target="welcome">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="when-the-system-learns-the-learner">Next →</button></div>
+<div class="section-content"><h2 id="gamification-before-ai" style="margin:42px 0 18px;padding:12px 16px;border-left:6px solid #546a91;background:#eef2f8;color:#172536;font-size:1.65em;line-height:1.25;"><span aria-hidden="true">⚙️</span> Gamification Before AI</h2>
+<p style="display:inline-block;margin:-6px 0 18px;padding:5px 10px;border-radius:999px;background:#243b55;color:#ffffff;font-size:.92em;font-weight:bold;letter-spacing:.02em;">Richard</p>
+<div style="background:#eef2f8;border:1px solid #cad3df;border-radius:8px;padding:12px 16px;margin:0 0 22px;">
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.9em;font-weight:bold;color:#243b55;margin-bottom:7px;">
+<span>Section path: 1 of 4</span><span>25% through the four main sections</span>
+</div>
+<div aria-label="Section position: one of four" style="width:100%;height:10px;background:#cad3df;border-radius:5px;overflow:hidden;">
+<div style="width:25%;height:100%;background:#243b55;"></div>
+</div>
+<p style="margin:7px 0 0;font-size:.84em;color:#526273;">Milestone: The machine we built</p>
+</div>
+<h3 id="who-made-who" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Who Made Who?</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The drums come first - a dry, gated snare and a floor tom locked into a militant, mid-tempo march. Steady, mechanical, and unmistakably AC/DC.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The rhythm guitar enters, and Brian Johnson starts singing about a video game. The player faces the machine one-on-one. Another dime disappears. The game wins again. What begins as a person controlling a machine becomes something more unsettling. The player may be playing the game, but the game has gotten its hooks into the player, too.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Then Angus Young's guitar comes in as fast and hard as one of the driverless semis gone mad in Stephen King's <em>Maximum Overdrive</em>. The song appeared on the film's 1986 soundtrack album (AC/DC, 1986). As the music builds, the question at the center of the song finally lands:</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>Who made who?</strong></p>
+<p class="acdc-flair">Ain't nobody told you?</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">It is a surprisingly good question for modern gamification.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Human beings create systems to influence human behavior. We establish goals, measure progress, assign scores, create ranks, and recognize accomplishments. Then we change our behavior because those systems exist. People made the system, and then the system changed what people did.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Modern gamification lives somewhere in that relationship. AI makes it more complicated because a system can use patterns in our responses to change what it offers us next.</p>
+<h3 id="making-progress-visible" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Making Progress Visible</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Human beings have the peculiar habit of taking invisible effort and turning it into something we can count, rank, display, and chase. Think of apprentices becoming journeymen and masters, soldiers moving through ranks, or students working toward degrees. Those structures are not automatically gamification. They illustrate the much broader habit of making advancement visible.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Visible progress can matter. Harkin et al. (2016), in a meta-analysis of 138 studies involving 19,951 participants, found that interventions designed to increase progress monitoring also increased goal attainment. This was evidence about monitoring goals, not a test of gamification itself. Seeing where we are does not guarantee that we will reach where we are going, but it can affect what we do next.</p>
+<h3 id="gamification-has-a-branding-problem" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Gamification Has a Branding Problem</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The word itself makes the idea sound sillier than it is. Say gamification to an adult learner, and they may picture cartoon badges, classroom competitions, or an instructor desperately trying to make professional development “fun.” The problem is built directly into the name.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Put simply, gamification borrows pieces of games without turning the activity itself into a game. Landers (2014) describes using game attributes outside games to influence learning-related attitudes and behaviors. A workplace module with a completion badge is still workplace training.</p>
+<div style="border:1px solid #cad3df;border-radius:8px;padding:20px;margin:16px 0;background:#f6f8fb;"><h3 style="margin:0 0 12px;font-size:1.15em;"><span aria-hidden="true">▦</span> <strong>Three structures that can look alike</strong></h3>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Visible progress:</strong> A record shows how far someone has advanced. A degree or a rank is not automatically gamification.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Gamification:</strong> Game elements support another activity. A practice module might use challenges, points, or badges.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Game-based learning:</strong> Learning occurs through playing a game. A simulation belongs here when it is designed as a game; simulations are not all games.</p>
+</div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">One learner may find a game engaging. Another may find the same activity childish, forced, or disconnected from why they showed up. Gamification does not require disguising adult education as recess. At its simplest, it may help the learner answer: Where am I? Where am I going? How will I know when I get there?</p>
+<h3 id="the-gamification-we-stop-seeing" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">The Gamification We Stop Seeing</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Perhaps the most familiar achievement systems are the ones we stop noticing. Fitness trackers close activity rings. Language apps maintain streaks. Ordinary effort becomes something measurable, and there is always another finish line.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Credit scores offer a stranger analogy. Almost nobody wakes up thinking, “I cannot wait to play Credit Score today,” yet the visible number and thresholds can become targets in themselves. Credit scoring is a consequential financial assessment, not an example of educational gamification. The resemblance is in what happens when a number starts organizing our behavior.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The machinery has been running around us for so long that most of us no longer hear it.</p>
+<h3 id="when-the-marker-becomes-the-motivation" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">When the Marker Becomes the Motivation</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A finish line can pull someone forward, but it can also make them forget why they started running. Adults enter education for wildly different reasons: a promotion, a credential, a new career, or the need to prove they can finish something difficult. Several motives can exist at once.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">An external reward may sustain effort when every step is not intrinsically interesting. A certification can show that someone met a professional standard. A degree can turn years of work into something visible. The marker does not contain the effort; it represents it.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The breakdown happens when the marker stops representing the goal and becomes the target. Students learn how to protect a grade, calculate the exact effort required to pass, maintain a streak, or stack credentials. If gamification drives participation and completion, it has accomplished something.</p>
+<p style="font-size:1.12em;font-weight:bold;background:#eef2f8;border-left:5px solid #546a91;padding:11px 14px;margin:16px 0;color:#172536;"><strong>Worked at what?</strong></p>
+<div style="border:1px solid #cad3df;border-radius:8px;padding:20px;margin:16px 0;background:#f6f8fb;"><h3 style="margin:0 0 12px;font-size:1.15em;"><span aria-hidden="true">◉</span> <strong>What did we actually measure?</strong></h3>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Participation:</strong> Did the learner return or finish?</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Performance:</strong> Could the learner complete the task under the conditions provided?</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Learning and transfer:</strong> Does the capability last, and can the learner use it in a different situation?</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;">These are related outcomes. One is not proof of the next.</p>
+</div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A learner can become exceptionally skilled at navigating the reward structure without mastering what it was meant to teach.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Research gives us reason for optimism without permitting complacency. Triantafyllou et al. (2025) emphasize that gamification's effectiveness depends on instructional design and context. Xu et al. (2025), in a meta-analysis of 143 effect sizes from 32 higher-education studies, found a moderate positive effect on learning outcomes overall. Results varied with the design, domain, duration, and outcomes measured. Neither review establishes that adding AI will improve those results.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">For the adult educator, “Did they engage?” cannot be the final question. Did they understand? Can they apply what they learned when the rewards are gone?</p>
+<h3 id="there-is-no-such-thing-as-the-adult-learner" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">There Is No Such Thing as “The Adult Learner”</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Of course adult learners exist, but there is no single interchangeable person who walks into every classroom carrying the same experiences, motivations, abilities, and expectations. One may already know half the material. Another may be encountering it for the first time. One wants detailed guidance; another desperately wants the instructor to get out of the way.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A leaderboard can awaken the competitive streak in one learner while making another wonder why someone turned professional development into <em>The Hunger Games</em>. They have not necessarily approached education incorrectly. They have brought different histories and expectations into the same room.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Educators can account for those differences through optional challenges, varied feedback, multiple pathways, and adjustments to difficulty. Adaptation did not begin with AI. Teachers and systems using predefined rules can already change what happens next. The practical limitation of a fixed design is the amount of ongoing adjustment it can provide.</p>
+<h3 id="a-score-can-tell-you-that-someone-failed-but-it-cannot-tell-you-why" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">A Score Can Tell You That Someone Failed, But It Cannot Tell You Why</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A learner may miss a question because the material is difficult, the wording is confusing, or their attention wandered. The score alone does not settle which explanation is right.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A good educator can sometimes recognize the difference. When one explanation fails, another can take its place. A movie, song, workplace problem, ridiculous analogy, or well-timed joke can bridge something unfamiliar and something the learner already understands.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Personalization is part of good teaching, but personalization and teaching are not synonyms. Changing the difficulty of a quiz is personalization. Knowing why the learner needs something different requires more than a score.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Marengo et al. (2025) identify personalized educational pathways as one use of AI alongside gamification. AI can help a system find patterns and propose adjustments at a scale that would be difficult for an instructor to manage alone. Those patterns are still interpretations of limited data. The system has not acquired a complete understanding of the person.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">This introduces a problem. A system designed to support learning and one designed to maximize compliance may use similar tools: timing, difficulty, feedback, rewards, and pathways. The crucial difference is whose goal those tools serve. An employer can legitimately set a required standard; that does not settle how much control the learner should retain in reaching it.</p>
+<p style="font-size:1.12em;font-weight:bold;background:#eef2f8;border-left:5px solid #546a91;padding:11px 14px;margin:16px 0;color:#172536;"><strong>Same tools. Different master.</strong></p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Humans built systems to influence behavior, and those systems changed what humans did. Now we are building systems that study those responses and adjust themselves accordingly. The machine in the song waited for another dime. An intelligent system can begin estimating why we put the dime in.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">So what happens when the system begins learning the learner?</p>
+<div style="border:2px solid #b97800;border-radius:10px;background:#fffaf0;padding:18px 20px;margin:30px 0 18px;box-shadow:0 4px 12px rgba(185,120,0,.12);">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;"><span aria-hidden="true" style="font-size:1.5em;">⚡</span><span style="background:#b97800;color:#ffffff;font-weight:900;letter-spacing:.08em;font-size:.82em;padding:4px 10px;border-radius:4px;text-transform:uppercase;">NEW ACHIEVEMENT!</span></div>
+<p style="margin:0 0 6px;color:#172536;font-size:1.1em;font-weight:bold;">Scoreboard Skeptic</p>
+<p style="margin:0;color:#526273;line-height:1.55;font-size:.9em;"><strong>Reward:</strong> One better question. You can now ask whether a system improved learning - or merely improved the score.</p>
+</div></div>
+<div class="panel-nav bottom-nav"><button class="nav-btn" data-target="welcome">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="when-the-system-learns-the-learner">Next →</button></div>
+</section>
+<section class="content-panel" data-section="when-the-system-learns-the-learner" hidden="" id="panel-when-the-system-learns-the-learner">
+<div class="section-banner" style="--accent:#546a91;">
+<div aria-hidden="true" class="section-icon">🧠</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 4 OF 8</div>
+<div class="section-title">When the System Learns</div>
+<div class="section-subtitle">Anna | adaptation &amp; prediction</div>
+</div>
+</div>
+<div class="panel-nav"><button class="nav-btn" data-target="gamification-before-ai">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="the-adult-learner-in-the-loop">Next →</button></div>
+<div class="section-content"><h2 id="when-the-system-learns-the-learner" style="margin:42px 0 18px;padding:12px 16px;border-left:6px solid #546a91;background:#eef2f8;color:#172536;font-size:1.65em;line-height:1.25;"><span aria-hidden="true">🧠</span> When the System Learns the Learner</h2>
+<p style="display:inline-block;margin:-6px 0 18px;padding:5px 10px;border-radius:999px;background:#243b55;color:#ffffff;font-size:.92em;font-weight:bold;letter-spacing:.02em;">Anna</p>
+<div style="background:#eef2f8;border:1px solid #cad3df;border-radius:8px;padding:12px 16px;margin:0 0 22px;">
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.9em;font-weight:bold;color:#243b55;margin-bottom:7px;">
+<span>Section path: 2 of 4</span><span>50% through the four main sections</span>
+</div>
+<div aria-label="Section position: two of four" style="width:100%;height:10px;background:#cad3df;border-radius:5px;overflow:hidden;">
+<div style="width:50%;height:100%;background:#243b55;"></div>
+</div>
+<p style="margin:7px 0 0;font-size:.84em;color:#526273;">Milestone: The system begins learning the learner</p>
+</div>
+<h3 id="what-changes-when-ai-enters-the-picture" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">What Changes When AI Enters the Picture?</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Integrating AI can make gamification more responsive by adapting content, difficulty, or feedback to patterns in learner activity. Generative AI adds the ability to produce new material (Abbes et al., 2024), while predictive models can estimate future performance from response patterns (Piech et al., 2015). These functions can work together, but they are not interchangeable.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The distinction is not simply static versus intelligent. Non-AI systems can provide immediate feedback and branching pathways. AI adds other ways to estimate learner needs or generate responses; educational value still depends on the design. Reviews describe promising applications, while an opinion article by Patiño Barriga et al. (2026) argues for integrating them through deliberate pedagogical choices. Adult educators need evidence about the particular design they intend to use.</p>
+<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;margin:16px 0;"><caption style="text-align:left;font-weight:bold;margin:8px 0">What AI may add</caption><thead><tr>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">Dimension</th>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">Fixed or rule-based design</th>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">What AI may add</th>
+</tr></thead><tbody>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Adaptation</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">An instructor specifies pathways or branching rules.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">A model estimates which task or level of difficulty may be useful next.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Content</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Examples and scenarios are prepared in advance.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Generative models can draft additional examples, questions, or dialogue.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Feedback</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Feedback can already be immediate and detailed.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">A model can respond to open-ended work or generate follow-up prompts.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Game elements</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Points, badges, stories, and collaboration can support different purposes.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Their timing or presentation can change using learner data.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Motivation</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Outcomes depend on relevance, choices, and implementation.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Personalization may help; intrinsic motivation and sustained learning are not automatic results.</td>
+</tr>
+</tbody></table></div>
+<h3 id="does-ai-solve-gamifications-problems-and-how" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Does AI Solve Gamification's Problems, and How?</h3>
+<h4 id="personalization--adaptive-learning" style="margin:24px 0 10px;color:#314a67;font-size:1.08em;line-height:1.35;">Personalization &amp; Adaptive Learning</h4>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Learner profiling uses available information, such as prior answers and activity history, to estimate what support might be useful. AI may help tailor pace, examples, practice, or feedback. It cannot reliably interpret every hesitation as boredom, confusion, or lack of knowledge.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">All three roles may change:</p>
+<ul style="margin:8px 0 18px 24px;padding:0;line-height:1.6;color:#243447;">
+<li style="margin:7px 0;"><strong>The system can recommend support.</strong> It can recommend practice or offer a cue when a pattern suggests difficulty. The recommendation remains an inference that may need correction.</li>
+<li style="margin:7px 0;"><strong>The learner can help shape the pathway.</strong> Learners can request examples, explain their goals, and challenge a recommendation. Responding to a learner's behavior does not itself grant that learner control.</li>
+<li style="margin:7px 0;"><strong>The instructor's role changes.</strong> Automation may reduce some repetitive work, but checking generated content, resolving errors, and monitoring outcomes create responsibilities of their own.</li>
+</ul>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Reviews of AI and gamification describe this potential for personalization (Abbes et al., 2024; Marengo et al., 2025). The educator still decides what the learning experience should accomplish.</p>
+<h4 id="feedback-remediation--changing-pathways" style="margin:24px 0 10px;color:#314a67;font-size:1.08em;line-height:1.35;">Feedback, Remediation &amp; Changing Pathways</h4>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">AI can supplement formative assessment by identifying patterns, generating practice, and suggesting feedback. It does not replace the need for valid assessments or professional judgment.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Deep knowledge tracing uses sequences of learner responses to predict future performance (Piech et al., 2015). A prediction can help select a task, but it does not directly reveal why an answer was wrong. Similarly, a generative model may propose that an error reflects a misconception, but an instructor or learner must be able to check that interpretation.</p>
+<details id="concept-card-dkt" style="border:2px solid #546a91;border-radius:8px;background:#f8fafc;padding:12px 14px;margin:14px 0 18px;cursor:pointer;">
+<summary style="font-weight:bold;color:#243b55;outline:none;">Concept card: Deep knowledge tracing</summary>
+<div style="margin-top:10px;padding-top:10px;border-top:1px dashed #cad3df;line-height:1.6;color:#243447;">
+<strong>What it can do:</strong> Use a sequence of learner responses to predict future performance.<br/><br/>
+<strong>What it cannot establish by itself:</strong> Why the learner made an error or which underlying misconception caused it.
+  </div>
+</details>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Feedback can take the form of a question, a hint, or a worked example. Which is appropriate depends on the learning goal and the learner's current needs. Awarding points for effort does not, by itself, establish that the system has improved motivation or understanding.</p>
+<div style="border:1px solid #cad3df;border-radius:8px;padding:20px;margin:16px 0;background:#f6f8fb;"><h3 style="margin:0 0 12px;font-size:1.15em;"><span aria-hidden="true">⇄</span> <strong>A recommendation the learner can inspect</strong></h3>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Observe:</strong> Several recent answers were incorrect.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Estimate:</strong> The model predicts that more practice may help.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Propose:</strong> Review this concept or try another example.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Check together:</strong> Does that recommendation fit the learner's explanation and goal?</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;">This is a proposed design pattern, not a description of every AI platform.</p>
+</div>
+<h4 id="holding-the-learner-in-the-challenge-zone" style="margin:24px 0 10px;color:#314a67;font-size:1.08em;line-height:1.35;">Holding the Learner in the Challenge Zone</h4>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Adaptive practice can offer additional support when work is too difficult and greater challenge when it is too easy. Error patterns and response times may help inform those adjustments, but they are imperfect measures of a learner's experience.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Keeping a learner successful on every attempt is not the same as helping them learn. A useful system must leave room for retrieval, uncertainty, and problems that require effort. The learner and instructor should be able to question a recommendation to lower the difficulty.</p>
+<h3 id="what-ai-cannot-resolve-on-its-own" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">What AI Cannot Resolve on Its Own</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">AI cannot make an irrelevant curriculum meaningful merely by personalizing it. Success inside a platform does not establish transfer to a workplace, and generated feedback requires checking. Burgos-Pereira et al. (2025) review potential applications in organizational training, but a review of promising approaches is not proof that a particular product works for a particular workforce.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Implementation also depends on understandable recommendations, suitable data, and evaluation beyond engagement. Zhaxybayev et al. (2026) identify gaps in explainability, integrated assessment of critical thinking, and resources for underrepresented languages. Those findings should guide questions about a proposed system, rather than become precise claims about every educational AI product.</p>
+<h3 id="example-1-duolingos-birdbrain" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Example 1: Duolingo's Birdbrain</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>Documented platform feature; not independent proof of learning effectiveness.</strong></p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Duolingo's technical account describes Birdbrain as a model that predicts the difficulty of an exercise for a particular learner. Its lesson generator can use those predictions when selecting exercises (Bicknell &amp; Brust, 2020). The app's game elements, such as streaks, are a separate part of the experience. AI-generated content, adaptive exercise selection, and gamification should not be treated as the same feature.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Duolingo also documented separating daily goals from the conditions for maintaining a streak (Yu, 2020). That is a useful reminder that changing a reward rule can change participation without establishing what learners retained. These dated accounts illustrate design choices; features may differ across versions of the app.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">For an adult educator, the question is whether the recommended practice addresses a learning need and whether the learner can understand or influence the process. That brings the learner back into the loop.</p></div>
+<div class="panel-nav bottom-nav"><button class="nav-btn" data-target="gamification-before-ai">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="the-adult-learner-in-the-loop">Next →</button></div>
+</section>
+<section class="content-panel" data-section="the-adult-learner-in-the-loop" hidden="" id="panel-the-adult-learner-in-the-loop">
+<div class="section-banner" style="--accent:#6b5f87;">
+<div aria-hidden="true" class="section-icon">🎯</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 5 OF 8</div>
+<div class="section-title">Adult Learner in the Loop</div>
+<div class="section-subtitle">Honey | andragogy &amp; agency</div>
+</div>
+</div>
+<div class="panel-nav"><button class="nav-btn" data-target="when-the-system-learns-the-learner">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="the-benefits-risks--real-world-test">Next →</button></div>
+<div class="section-content"><h2 id="the-adult-learner-in-the-loop" style="margin:42px 0 18px;padding:12px 16px;border-left:6px solid #546a91;background:#eef2f8;color:#172536;font-size:1.65em;line-height:1.25;"><span aria-hidden="true">🎯</span> The Adult Learner in the Loop</h2>
+<p style="display:inline-block;margin:-6px 0 18px;padding:5px 10px;border-radius:999px;background:#243b55;color:#ffffff;font-size:.92em;font-weight:bold;letter-spacing:.02em;">Honey</p>
+<div style="background:#eef2f8;border:1px solid #cad3df;border-radius:8px;padding:12px 16px;margin:0 0 22px;">
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.9em;font-weight:bold;color:#243b55;margin-bottom:7px;">
+<span>Section path: 3 of 4</span><span>75% through the four main sections</span>
+</div>
+<div aria-label="Section position: three of four" style="width:100%;height:10px;background:#cad3df;border-radius:5px;overflow:hidden;">
+<div style="width:75%;height:100%;background:#243b55;"></div>
+</div>
+<p style="margin:7px 0 0;font-size:.84em;color:#526273;">Milestone: Put the adult learner back in the loop</p>
+</div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The design of automated systems uses specific vocabulary to describe where humans sit in relation to a machine. Research on levels of automation asks how much of a decision a system makes and how much stays with its operator (Parasuraman et al., 2000). The terms <em>in the loop</em>, <em>on the loop</em>, and <em>out of the loop</em> also appear in discussions of autonomous military systems (Human Rights Watch &amp; International Human Rights Clinic, 2012).</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Applied here, the difference is who holds decision authority. A learner can supply a system with data while having little influence over the decisions made from those data.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Our two adult-learning foundations are <strong>andragogy</strong> and <strong>self-directed learning</strong>. Together, they help us ask whether personalization respects adults' purposes and develops their ability to direct learning. The supporting studies below examine particular design choices rather than add further foundational theories.</p>
+<h3 id="andragogy" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Andragogy</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">How do core principles of adult learning fit into intelligent gamification?</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Knowles's andragogical model describes adults' need to know why they are learning, their self-concept as responsible decision-makers, their experience, readiness to learn, problem orientation, and motivation (Knowles et al., 2015). These are working assumptions, not descriptions that fit every adult in every situation.</p>
+<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;margin:16px 0;"><caption style="text-align:left;font-weight:bold;margin:8px 0">Andragogy and adaptive gamification</caption><thead><tr>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">Andragogical assumption</th>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">What AI-adaptive gamification can offer</th>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">Where it can work against the principle</th>
+</tr></thead><tbody>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Need to know</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Explain why a task or review was assigned.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Give no reason for changing the pathway.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Self-concept</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Offer meaningful choices of pace and challenge.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Decide silently and call the result personalized.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Experience</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Build examples around the learner's field and invite reflection.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Treat experience only as data to mine.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Readiness</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Connect practice to a current work or life need.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Push content because participation has dipped.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Problem orientation</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Organize challenges around useful problems.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Make maintaining the reward the main problem to solve.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Motivation</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Support a sense of competence and a personally meaningful purpose.</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Tune incentives only to keep the learner clicking.</td>
+</tr>
+</tbody></table></div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Intelligent gamification can meet the letter of andragogy while missing its spirit. Individualization is only part of the issue. Knowles's process model involves learners in diagnosing needs, setting objectives, and evaluating results. Profiling can support that process when learners can inspect and question it. When the diagnosis happens invisibly, the experience may be personalized to the learner without being developed with the learner.</p>
+<h3 id="self-directed-learning" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Self-Directed Learning</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Garrison's (1997) model brings together three dimensions: self-management, or control over the learning task and its context; self-monitoring, or responsibility for constructing meaning and checking understanding; and motivation, including both beginning and persisting with learning.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Adaptive systems can support each dimension, but predicting a learner's performance is not the same as that learner reflecting on understanding. Recommending a pathway is not the same as the learner deciding how to proceed. If the system makes every plan and interprets every result, the learner loses opportunities to practice those decisions.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Darvishi et al. (2024) examined this concern in a randomized experiment involving 1,625 university students across 10 courses. The system prompted students to improve peer feedback. After an initial period with AI assistance, groups received continued prompts, no prompts, self-monitoring checklists, or both supports. Students tended to rely on the assistance rather than carry the same behavior forward without it. Checklists helped fill part of the gap but were less effective than continued AI assistance; combining both did not outperform AI alone. This was a study of peer feedback, not proof that every AI tutor creates dependence.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Practice can also feel successful without producing durable learning. Bjork and Bjork (2011) describe desirable difficulties: conditions such as spacing practice, varying practice, and retrieving information that can make practice harder while supporting retention. The difficulty must be manageable. Confusion and inaccessible instruction are not desirable merely because they are difficult.</p>
+<details id="concept-card-desirable-difficulty" style="border:2px solid #546a91;border-radius:8px;background:#f8fafc;padding:12px 14px;margin:14px 0 18px;cursor:pointer;">
+<summary style="font-weight:bold;color:#243b55;outline:none;">Concept card: Desirable difficulty</summary>
+<div style="margin-top:10px;padding-top:10px;border-top:1px dashed #cad3df;line-height:1.6;color:#243447;">
+<strong>The idea:</strong> Some effortful conditions, such as retrieval, spacing, or varied practice, can support durable learning even when practice feels harder.<br/><br/>
+<strong>The boundary:</strong> Confusion, inaccessible instruction, or unnecessary barriers are not desirable simply because they are difficult.
+  </div>
+</details>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Applied to adaptive gamification, this means the educator should ask what the system is optimizing. Constantly removing uncertainty may improve immediate performance while reducing opportunities to judge an answer or retrieve it independently. That is a reason to evaluate the timing and purpose of support, not a rule that immediate feedback is harmful.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Grow's (1991) model offers one way to adjust support within self-directed learning. It describes dependent, interested, involved, and self-directed learners, with teaching roles ranging from direct guidance to consultation. Those positions should not become permanent labels. A person may need substantial guidance in an unfamiliar subject while directing learning confidently elsewhere.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">An adaptive system can therefore adjust how much responsibility it asks the learner to take, as well as task difficulty. The aim is to build the judgment needed for the learning goal. It need not remove an accessibility tool or useful professional aid to prove that learning occurred.</p>
+<h3 id="autonomy--learner-control" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Autonomy &amp; Learner Control</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Sailer et al. (2017) tested combinations of game elements in a randomized study. Badges, leaderboards, and performance graphs supported participants' sense of competence and task meaningfulness. Avatars, a meaningful story, and teammates supported social relatedness. The researchers did not produce the intended effect on perceived decision freedom.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">That result matters here. Feeling engaged in meaningful work and having authority over a learning decision are different things. Giving someone three pathways does not tell us who selected those pathways, whether another is possible, or whether declining carries a penalty.</p>
+<div style="border:1px solid #cad3df;border-radius:8px;padding:20px;margin:16px 0;background:#f6f8fb;"><h3 style="margin:0 0 12px;font-size:1.15em;"><span aria-hidden="true">◎</span> <strong>Where is the learner in this decision?</strong></h3>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>In the loop:</strong> The system proposes a change; the learner accepts, rejects, or helps revise it.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>On the loop:</strong> The system adjusts automatically; the learner can see what changed and override it.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>Out of the loop:</strong> A decision is made without the learner's involvement or a meaningful way to challenge it.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;">A single platform can use all three arrangements for different decisions.</p>
+</div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Not every adjustment needs approval. Nobody wants to sign off on every spaced-repetition interval. The problem arises when a learner believes they control a consequential decision but cannot see or change it.</p>
+<h3 id="motivation-relevance--experience" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Motivation, Relevance &amp; Experience</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A generative system can draft a case around a learner's industry, role, or recent challenge. A good educator bridges the unfamiliar and familiar with a story, memory, or analogy, hanging information on hooks the learner already has. AI can attempt that bridge at scale. Someone still needs to check that the example is accurate and actually relevant.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Adult learning also happens in mandated settings such as safety training, compliance, and required professional development. Here, the learner does not choose every goal. The organization can legitimately require a standard while allowing choices about practice, pacing within a deadline, or how the learner demonstrates understanding.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Sailer and Homner's (2020) meta-analysis found positive average effects of gamification on cognitive, motivational, and behavioral outcomes, with differences across designs and studies. Some findings favored combining competition with collaboration. That supports testing purposeful designs; it does not establish the best design for every required training program.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Slade and Prinsloo (2013) argue for treating learners as agents in the collection and use of learning data. Learners need to understand what is being collected, why, and who can access it. Profiles should also remain open to correction. A prediction made early in a course should not harden into a permanent label.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The question is whether the learner is a partner in that observation or only its object.</p>
+<h3 id="example-2-the-us-armys-after-action-review-as-a-design-pattern" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Example 2: The US Army's After-Action Review as a Design Pattern</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>Established training practice; the AI-supported version below is a proposal.</strong></p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The Army's after-action review uses a guided discussion of a training event to identify what happened, why it happened, and how to improve (Department of the Army, 1993). Its familiar questions can be adapted for an adult-learning activity:</p>
+<ul style="margin:8px 0 18px 24px;padding:0;line-height:1.6;color:#243447;">
+<li style="margin:7px 0;">What was supposed to happen?</li>
+<li style="margin:7px 0;">What actually happened?</li>
+<li style="margin:7px 0;">Why was there a difference?</li>
+<li style="margin:7px 0;">What should we sustain or improve?</li>
+</ul>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">An AI-supported version could help assemble a timeline or summarize recorded decisions. Participants would check that record, explain their reasoning, and decide what to change. If the training uses game elements, the discussion could also examine whether a reward encouraged the intended behavior.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The after-action review is not itself evidence that AI-enhanced gamification works. It gives us a design pattern that keeps interpretation with the learner while assigning the machine a supporting role.</p>
+<h3 id="example-3-a-learner-who-built-his-own-loop" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">Example 3: A Learner Who Built His Own Loop</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>One learner's reported experience.</strong></p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Jordan is a 32-year-old personal trainer working toward a career as a physical therapist. He uses a general-purpose AI assistant, Claude, to build a quiz game for his anatomy course (J. Rice, personal communication, September 19, 2026).</p>
+<div style="border:1px solid #cad3df;border-radius:8px;padding:20px;margin:16px 0;background:#f6f8fb;"><h3 style="margin:0 0 12px;font-size:1.15em;"><span aria-hidden="true">↻</span> <strong>Jordan's study cycle</strong></h3>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>1. Build a set.</strong> Upload course worksheets and request ten questions organized by category.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>2. Attempt the questions.</strong> Answer from memory and review the assistant's feedback.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>3. Judge understanding.</strong> Examine missed answers and answers that were correct but uncertain.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;"><strong>4. Choose the next focus.</strong> Supply more course material and request practice on the areas he identifies.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;">The reported method leaves the next learning decision with Jordan. Checking AI feedback against course materials remains necessary.</p>
+</div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">His questions became more complex over time: muscle names, then actions, origins and insertions, and relationships among muscles. Jordan chose that progression. It suggests a move beyond isolated recall, although the question format and the quality of his explanations would be needed to judge the depth of learning.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Jordan is explicit about wanting to recall the material rather than look it up later. Research on retrieval practice supports that distinction: Roediger and Karpicke (2006) found that retrieving studied material could produce better delayed retention than repeated study under their experimental conditions.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Jordan reports scoring 100% on his week-three anatomy exam and credits the drilling. He also reports finding the method more engaging than flashcards. This is encouraging, but it is his account of one early assessment. It does not establish that AI caused the result or that the knowledge will transfer to clinical reasoning.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Several features connect his method to the adult-learning foundations:</p>
+<ul style="margin:8px 0 18px 24px;padding:0;line-height:1.6;color:#243447;">
+<li style="margin:7px 0;"><strong>Self-monitoring stays with the learner.</strong> Jordan decides what a missed or uncertain answer means and chooses the next focus. He is practicing the judgment described in Garrison's model.</li>
+<li style="margin:7px 0;"><strong>A score is not the only signal.</strong> A correct answer can be a guess. Jordan's uncertainty check adds information, but confidence itself can be inaccurate. Research on overconfidence shows why learners should compare their judgments with dependable evidence (Dunlosky &amp; Rawson, 2012).</li>
+<li style="margin:7px 0;"><strong>The purpose is concrete.</strong> His anatomy study connects with a career goal and his experience as a trainer. That gives the learning an immediate anchor.</li>
+<li style="margin:7px 0;"><strong>The learner helps design the activity.</strong> Categories and scores can be incorporated into a gameful study routine. A quiz with ten questions is not automatically gamification; the relevant point is how he uses game elements to structure practice.</li>
+</ul>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The AI's feedback is not an objective answer key. Uploading course materials gives it a reference, but instructions to use only those materials do not guarantee that it will follow them accurately. The instructor's materials and approved answers remain the standard for checking a disputed response.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A less experienced learner may need help designing useful questions, checking feedback, and interpreting uncertainty. Jordan's account illustrates learner control; it does not establish a formula that will work equally well for everyone.</p>
+<div style="border:2px solid #6b5f87;border-radius:10px;background:#f7f4fb;padding:18px 20px;margin:30px 0 18px;box-shadow:0 4px 12px rgba(107,95,135,.12);">
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;"><span aria-hidden="true" style="font-size:1.5em;">⚡</span><span style="background:#6b5f87;color:#ffffff;font-weight:900;letter-spacing:.08em;font-size:.82em;padding:4px 10px;border-radius:4px;text-transform:uppercase;">NEW ACHIEVEMENT!</span></div>
+<p style="margin:0 0 6px;color:#172536;font-size:1.1em;font-weight:bold;">Human Still in the Loop</p>
+<p style="margin:0;color:#526273;line-height:1.55;font-size:.9em;"><strong>Reward:</strong> Zero automation points. You kept prediction, recommendation, and learner judgment from collapsing into the same thing.</p>
+</div></div>
+<div class="panel-nav bottom-nav"><button class="nav-btn" data-target="when-the-system-learns-the-learner">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="the-benefits-risks--real-world-test">Next →</button></div>
+</section>
+<section class="content-panel" data-section="the-benefits-risks--real-world-test" hidden="" id="panel-the-benefits-risks--real-world-test">
+<div class="section-banner" style="--accent:#237343;">
+<div aria-hidden="true" class="section-icon">⚖️</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 6 OF 8</div>
+<div class="section-title">Benefits, Risks &amp; Test</div>
+<div class="section-subtitle">Lauren | adoption framework</div>
+</div>
+</div>
+<div class="panel-nav"><button class="nav-btn" data-target="the-adult-learner-in-the-loop">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="try-it-yourself">Next →</button></div>
+<div class="section-content"><h2 id="the-benefits-risks--real-world-test" style="margin:42px 0 18px;padding:12px 16px;border-left:6px solid #546a91;background:#eef2f8;color:#172536;font-size:1.65em;line-height:1.25;"><span aria-hidden="true">⚖️</span> The Benefits, Risks &amp; Real-World Test</h2>
+<p style="display:inline-block;margin:-6px 0 18px;padding:5px 10px;border-radius:999px;background:#243b55;color:#ffffff;font-size:.92em;font-weight:bold;letter-spacing:.02em;">Lauren</p>
+<div style="background:#eef2f8;border:1px solid #cad3df;border-radius:8px;padding:12px 16px;margin:0 0 22px;">
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.9em;font-weight:bold;color:#243b55;margin-bottom:7px;">
+<span>Section path: 4 of 4</span><span>100% through the four main sections</span>
+</div>
+<div aria-label="Section position: four of four" style="width:100%;height:10px;background:#cad3df;border-radius:5px;overflow:hidden;">
+<div style="width:100%;height:100%;background:#243b55;"></div>
+</div>
+<p style="margin:7px 0 0;font-size:.84em;color:#526273;">Milestone: Decide whether the added value justifies the added risk</p>
+</div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">AI can make gamification more responsive and potentially more useful to adult learners. It can also make the same systems more observant, more persuasive, and more capable of making decisions about people without their full awareness.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">The harder question is: <strong>Better for what, better for whom, and at what ultimate cost?</strong></p>
+<h3 id="1-personalization--meaningful-learning" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">1. Personalization &amp; Meaningful Learning</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Research on AI and gamification describes potential benefits from more responsive feedback and learning pathways (Marengo et al., 2025). Broader gamification research reports positive average effects on learning, although effectiveness varies with design and context (Triantafyllou et al., 2025; Xu et al., 2025).</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">For adults, useful adaptation might provide extra practice, connect examples to professional goals, or accommodate different starting points. But personalization should serve learning. A system is not educationally better simply because it changes more frequently or knows more about the learner.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">It can become very good at increasing clicks, completion rates, streaks, or quiz scores without improving the outcome the educator actually cares about. As Richard asks, “Worked at what?”</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>Practical response:</strong> Define the skill before selecting the platform. Compare the AI-supported design with a reasonable alternative, such as the same practice with prepared feedback. Check retention and application after practice, using the tools appropriate to the real task. The added AI should earn its place.</p>
+<h3 id="2-agency-manipulation--dependence" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">2. Agency, Manipulation &amp; Dependence</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Gamification influences behavior. AI can make that influence more individualized. Susser et al. (2019) discuss manipulation as covert influence that undermines a person's ability to make decisions, including by exploiting vulnerabilities.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">That does not mean every reminder or recommendation is manipulation. Educators have always structured learning environments. Our concern grows when the learner cannot see how steering occurs, cannot meaningfully question it, and is being directed toward a purpose they do not understand. These are warning signs for review, not a validated diagnostic formula.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">A highly adaptive system can also become a very effective scaffold. Darvishi et al. (2024) give us reason to ask whether learners internalize the processes assistance supports. An assistant might invite learners to identify a weak area before revealing its analysis, or gradually hand more planning decisions back to them.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>Practical response:</strong> Explain the goal and give learners meaningful control over consequential adjustments. Ask them to interpret results and plan next steps. Reduce instructional scaffolding when doing so supports the goal; preserve assistive technology and other tools learners appropriately use in practice. Independence should not become an excuse to remove access.</p>
+<h3 id="3-privacy--transparency" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">3. Privacy &amp; Transparency</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Personalization requires information. That may include answers, mistakes, response times, preferences, or patterns of participation. It does not follow that a system needs every available piece of information.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Regan and Jesse (2019) examine concerns about privacy, surveillance, autonomy, and sorting learners through personalized educational technologies. In workplace learning, a prediction used to recommend practice may have different consequences if it is also sent to a supervisor.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Questions should be visible rather than buried in a privacy policy: What is collected, why is it needed, who can see it, and how long is it retained? Can learners inspect or correct an inference? Can optional personalization be declined without losing access to the training?</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>Practical response:</strong> Limit collection to the learning purpose, define access and retention, and separate practice feedback from consequential employment judgments. Provide a person learners can contact when a profile or recommendation is wrong.</p>
+<h3 id="4-equity--accessibility" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">4. Equity &amp; Accessibility</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Personalization can sound inherently equitable because each learner receives something different. But different does not automatically mean fair.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Baker and Hawn (2022) review evidence that bias can enter educational AI at multiple points. They describe findings involving race and ethnicity, gender, nationality, socioeconomic status, disability, and other characteristics, while noting gaps in the evidence.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Imagine two adults who struggle on the same assessment. One receives another chance at an advanced task; the other is repeatedly routed into remedial work. This is a hypothetical example, but it shows why an incorrect prediction could restrict opportunity rather than provide useful support.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;"><strong>Practical response:</strong> Examine outcomes across relevant learner groups, check keyboard and screen-reader access, and provide workable alternatives for learners with limited connectivity or language support. Learners need a way to challenge an inappropriate classification. A prediction should inform a decision, not become the learner's identity.</p>
+<details id="concept-card-prediction" style="border:2px solid #546a91;border-radius:8px;background:#f8fafc;padding:12px 14px;margin:14px 0 18px;cursor:pointer;">
+<summary style="font-weight:bold;color:#243b55;outline:none;">Concept card: Prediction is not identity</summary>
+<div style="margin-top:10px;padding-top:10px;border-top:1px dashed #cad3df;line-height:1.6;color:#243447;">
+<strong>A prediction:</strong> A provisional estimate based on available data that may help inform support or a decision.<br/><br/>
+<strong>The risk:</strong> Treating that estimate as a fixed description of the learner can turn an uncertain model output into a durable label.
+  </div>
+</details>
+<h3 id="the-real-world-test" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">The Real-World Test</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">AI-enhanced gamification does not need to pass a test of perfection. It does need to demonstrate enough educational value to justify the additional information, influence, and work it requires.</p>
+<div style="overflow-x:auto"><table style="border-collapse:collapse;width:100%;margin:16px 0;"><caption style="text-align:left;font-weight:bold;margin:8px 0">The real-world test</caption><thead><tr>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">Test</th>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">Question to ask</th>
+<th scope="col" style="text-align:left;background:#243b55;color:#fff;border:1px solid #d9d9d9;padding:12px;">Warning sign</th>
+</tr></thead><tbody>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Learning &amp; Capability</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Does the learning last, transfer to the intended task, and help learners perform with the tools appropriate to that task?</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Success is defined mainly by clicks, streaks, or completion, or performance depends on guidance that will not be available when needed.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Agency</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Does the learner understand the goal and have meaningful influence?</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">The system silently decides what the learner needs.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Transparency</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Can learners see what is collected, inferred, and shared?</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Profiles and consequential predictions are invisible.</td>
+</tr>
+<tr>
+<th scope="row" style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Equity</th>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Does the design work for different learners, with accessible alternatives?</td>
+<td style="text-align:left;vertical-align:top;background:#f5f7fa;border:1px solid #d9d9d9;padding:12px;">Untested predictions restrict opportunity.</td>
+</tr>
+</tbody></table></div>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Jordan's account illustrates the distinction. It offers a promising account of agency because he selects the next topic. His reported exam score is limited evidence of learning. The account does not tell us enough about data settings, accessibility, or longer-term transfer to clear those parts of the test. One strong feature cannot answer every question.</p>
+<div style="border:1px solid #cad3df;border-radius:8px;padding:20px;margin:16px 0;background:#f6f8fb;"><h3 style="margin:0 0 12px;font-size:1.15em;"><span aria-hidden="true">●</span> <strong>Green Light, Yellow Light, Red Light</strong></h3>
+<p style="background:#eaf5ee;border-left:5px solid #237343;padding:12px 15px;margin:10px 0;"><strong>GREEN - A justified, monitored use.</strong> The learning purpose is clear, evidence supports the intended use, learners have meaningful control, and data and access arrangements are understood.</p>
+<p style="background:#fff4d9;border-left:5px solid #8a6100;padding:12px 15px;margin:10px 0;"><strong>YELLOW - Investigate or redesign.</strong> The system appears helpful, but evidence is mainly engagement data, explanations are unclear, or learners have limited ways to challenge decisions.</p>
+<p style="background:#fcebeb;border-left:5px solid #a23232;padding:12px 15px;margin:10px 0;"><strong>RED - Do not adopt as designed.</strong> Hidden steering, unjustified data sharing, inaccessible participation, or unchallengeable consequential predictions outweigh the claimed benefit.</p>
+<p style="background:#ffffff;border-left:5px solid #546a91;padding:12px 15px;margin:10px 0;">A green light applies to a defined use, not to every feature of a product.</p>
+</div>
+<h3 id="so-is-the-system-adapting-to-the-learner" style="margin:30px 0 12px;color:#243b55;font-size:1.28em;line-height:1.3;">So, Is the System Adapting to the Learner?</h3>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">AI can overcome some practical limits of fixed gamification by adjusting practice, feedback, and content. It can enhance useful features when those adjustments address an actual learning need. It introduces new risks when greater responsiveness depends on opaque profiling, unequal treatment, or decisions learners cannot question.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Our recommendation is to adopt it conditionally: establish the purpose, evaluate the added value, and keep people able to inspect and change consequential decisions. Adults also need the digital literacy to question generated answers, instructors need time to review the system, and institutions need to account for cost and access. These conditions affect whether a promising design is feasible in practice.</p>
+<p style="margin:0 0 14px;line-height:1.65;color:#243447;">Learners will adapt as they learn. That alone is not the problem. The question is whether they understand and can influence the purpose of that adaptation, and whether the capability they gain is worth what the system asks of them.</p></div>
+<div class="panel-nav bottom-nav"><button class="nav-btn" data-target="the-adult-learner-in-the-loop">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="try-it-yourself">Next →</button></div>
+</section>
+<section class="content-panel" data-section="try-it-yourself" hidden="" id="panel-try-it-yourself">
+<div class="section-banner" style="--accent:#b97800;">
+<div aria-hidden="true" class="section-icon">🕹️</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 7 OF 8</div>
+<div class="section-title">Choose Your Own Adventure</div>
+<div class="section-subtitle">Six decisions. Twelve possible Insight Points.</div><div class="banner-easter">▶ PLAY ME</div>
+</div>
+</div>
+<div class="panel-nav"><button class="nav-btn" data-target="the-benefits-risks--real-world-test">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="references">Next →</button></div>
+<div class="section-content">
+<h2 id="try-it-yourself" style="margin:0 0 6px;color:#243b55;">Try It Yourself</h2>
+<div class="system-notice">
+<div class="system-kicker">SYSTEM ONLINE</div>
+<div class="system-title">Six decisions stand between pilot and deployment.</div>
+<p>You are part of a team testing an AI-powered learning system. It can change practice activities, adjust difficulty, notice patterns, and recommend what a learner might need next.</p>
+<p><strong>Your job:</strong> make six real-world decisions. One answer is strongest each time.</p>
+</div>
+<div class="scoreboard" id="scoreboard">
+<div>
+<div class="score-label">INSIGHT SCORE</div>
+<div class="score-number"><span id="score-total">0</span> / 12</div>
+</div>
+<div>
+<div class="score-label">DECISIONS MADE</div>
+<div class="score-number"><span id="answered-total">0</span> / 6</div>
+</div>
+<div class="score-scale">
+<span><strong>+2</strong> strongest</span>
+<span><strong>+1</strong> reasonable</span>
+<span><strong>+0</strong> misses something important</span>
+</div>
+</div>
+<div class="activity-rule">
+  The goal is not to guess what the computer wants. The goal is to decide what you would actually do.
+</div>
+<section class="lab lab-stage active-lab" data-lab="1">
+<div class="lab-header">
+<div>
+<div class="lab-kicker">DECISION LAB 1</div>
+<h3>Let the System Adapt</h3>
+</div>
+<div class="lab-progress">
+<span>1 of 3</span>
+<div class="mini-track"><div class="mini-fill" style="width:33.333%;"></div></div>
+</div>
+</div>
+<article class="question-card question-stage active-question" data-question="q1">
+<div class="question-number">DECISION 1</div>
+<p>A learner misses several questions.</p>
+<p>The AI wants to give them more examples, slow the pace a little, and temporarily make the practice easier.</p>
+<p><strong>The final skill they must master will not change.</strong></p>
+<h4>What should happen?</h4>
+<div class="answer-grid">
+<button class="answer-btn" data-feedback="q1a" data-score="2">
+<span class="answer-letter">A</span>
+<span>Let the AI adjust the practice automatically. The learner still has to reach the same final goal.</span>
+</button>
+<button class="answer-btn" data-feedback="q1b" data-score="1">
+<span class="answer-letter">B</span>
+<span>Tell the learner they are struggling and ask permission before changing anything.</span>
+</button>
+<button class="answer-btn" data-feedback="q1c" data-score="0">
+<span class="answer-letter">C</span>
+<span>Make an instructor approve every adjustment first.</span>
+</button>
+</div>
+<div aria-live="polite" class="response-slot"><div class="feedback-box" hidden="" id="q1a">
+<div class="feedback-score good">SYSTEM UPDATE: +2 INSIGHT</div>
+<p><strong>Same destination. Different route.</strong></p>
+<p>This is one of the strongest uses of adaptive AI. The system can provide low-stakes scaffolding without changing what the learner ultimately has to know or do.</p>
+</div><div class="feedback-box" hidden="" id="q1b">
+<div class="feedback-score mid">SYSTEM UPDATE: +1 INSIGHT</div>
+<p>Respecting learner choice matters. But announcing every small adjustment can make ordinary scaffolding feel like remediation.</p>
+<p>Learners should know that the system adapts. That does not necessarily mean every extra example needs a flashing <strong>YOU NEEDED HELP</strong> sign.</p>
+</div><div class="feedback-box" hidden="" id="q1c">
+<div class="feedback-score low">SYSTEM UPDATE: +0 INSIGHT</div>
+<p>Human oversight sounds safe, but this removes much of the reason for using an adaptive system.</p>
+<p><strong>Congratulations. You bought artificial intelligence and gave it a permission slip.</strong></p>
+</div></div>
+</article>
+<article class="question-card question-stage" data-question="q2" hidden="">
+<div class="question-number">DECISION 2</div>
+<p>One month later, the organization checks the results.</p>
+<p>This is required annual training. The main goals are for employees to complete the material and demonstrate the required knowledge on the assessment.</p>
+<p><strong>Completion is up. Assessment scores are up.</strong></p>
+<h4>Is the AI working?</h4>
+<div class="answer-grid">
+<button class="answer-btn" data-feedback="q2a" data-score="2">
+<span class="answer-letter">A</span>
+<span>Probably. Those are the outcomes this training was designed to produce.</span>
+</button>
+<button class="answer-btn" data-feedback="q2b" data-score="0">
+<span class="answer-letter">B</span>
+<span>Definitely. Higher completion and test scores prove better learning.</span>
+</button>
+<button class="answer-btn" data-feedback="q2c" data-score="1">
+<span class="answer-letter">C</span>
+<span>No. Unless we measure long-term transfer, these results mean nothing.</span>
+</button>
+</div>
+<div aria-live="polite" class="response-slot"><div class="feedback-box" hidden="" id="q2a">
+<div class="feedback-score good">SYSTEM UPDATE: +2 INSIGHT</div>
+<p><strong>Context matters.</strong></p>
+<p>If completion and successful performance on the required assessment are the actual goals, improvement in those measures is meaningful evidence.</p>
+<p>That does not prove every possible kind of learning improved. It means the evidence matches the purpose of this particular training.</p>
+</div><div class="feedback-box" hidden="" id="q2b">
+<div class="feedback-score low">SYSTEM UPDATE: +0 INSIGHT</div>
+<p>Careful.</p>
+<p>Better numbers are evidence of better numbers. Whether they represent meaningful learning depends on what the training was supposed to accomplish.</p>
+</div><div class="feedback-box" hidden="" id="q2c">
+<div class="feedback-score mid">SYSTEM UPDATE: +1 INSIGHT</div>
+<p>You are asking a good question, but perhaps too early.</p>
+<p>Long-term transfer matters when the goal is long-term performance. For this training, completion and the required assessment are themselves part of the intended outcome.</p>
+</div></div>
+</article>
+<div class="lab-achievement" hidden="" id="lab1-achievement">
+<div class="achievement-kicker">NEW ACHIEVEMENT!</div>
+<div class="achievement-title">SAME DESTINATION, DIFFERENT ROUTE</div>
+<div class="achievement-copy">You let the machine adapt without letting it redefine success.</div>
+<div class="achievement-reward">Reward: 4 Insight Points and absolutely no commemorative plaque.</div>
+</div>
+</section>
+<section class="lab lab-stage" data-lab="2" hidden="">
+<div class="lab-header">
+<div>
+<div class="lab-kicker">DECISION LAB 2</div>
+<h3>When Data Becomes Judgment</h3>
+</div>
+<div class="lab-progress">
+<span>2 of 3</span>
+<div class="mini-track"><div class="mini-fill" style="width:66.666%;"></div></div>
+</div>
+</div>
+<article class="question-card question-stage" data-question="q3" hidden="">
+<div class="question-number">DECISION 3</div>
+<div class="system-alert">SYSTEM ALERT: DISENGAGED LEARNER</div>
+<p>The learner answers more slowly than most people and sometimes goes several days without logging in.</p>
+<p>Then you learn two things:</p>
+<ul>
+<li>The learner uses assistive technology.</li>
+<li>The learner works rotating overnight shifts.</li>
+</ul>
+<p>On the actual performance task, the learner is doing very well.</p>
+<h4>What should happen to the AI's label?</h4>
+<div class="answer-grid">
+<button class="answer-btn" data-feedback="q3a" data-score="0">
+<span class="answer-letter">A</span>
+<span>Keep it. The activity data are accurate.</span>
+</button>
+<button class="answer-btn" data-feedback="q3b" data-score="1">
+<span class="answer-letter">B</span>
+<span>Delete the label and stop using response speed or login frequency for anyone.</span>
+</button>
+<button class="answer-btn" data-feedback="q3c" data-score="2">
+<span class="answer-letter">C</span>
+<span>Reconsider what the data mean, compare them with actual performance, and correct the learner's profile if needed.</span>
+</button>
+</div>
+<div aria-live="polite" class="response-slot"><div class="feedback-box" hidden="" id="q3a">
+<div class="feedback-score low">SYSTEM UPDATE: +0 INSIGHT</div>
+<p>The data may be accurate. The conclusion may not be.</p>
+<p><strong>Accurate data can still support a bad inference.</strong></p>
+</div><div class="feedback-box" hidden="" id="q3b">
+<div class="feedback-score mid">SYSTEM UPDATE: +1 INSIGHT</div>
+<p>You fixed the immediate problem, but you may have overcorrected.</p>
+<p>Those signals could still be useful in some situations. The problem was treating them as proof instead of interpreting them in context.</p>
+</div><div class="feedback-box" hidden="" id="q3c">
+<div class="feedback-score good">SYSTEM UPDATE: +2 INSIGHT</div>
+<p>The numbers do not disappear. Their meaning changes.</p>
+<p>Context and demonstrated performance give the activity data something they did not have before. The system should not quietly turn a behavioral pattern into an identity.</p>
+</div></div>
+</article>
+<article class="question-card question-stage" data-question="q4" hidden="">
+<div class="question-number">DECISION 4</div>
+<p>HR asks to see the AI's learner profiles.</p>
+<p>They say they only want to identify employees who might need more training.</p>
+<p>The profiles include predictions, risk scores, mistakes, response patterns, and other information collected while people were learning.</p>
+<h4>What do you give HR?</h4>
+<div class="answer-grid">
+<button class="answer-btn" data-feedback="q4a" data-score="0">
+<span class="answer-letter">A</span>
+<span>Give them the complete learner profile. They are responsible for employee performance.</span>
+</button>
+<button class="answer-btn" data-feedback="q4b" data-score="2">
+<span class="answer-letter">B</span>
+<span>Give HR the training recommendations, but keep the predictive profile and risk scores private.</span>
+</button>
+<button class="answer-btn" data-feedback="q4c" data-score="1">
+<span class="answer-letter">C</span>
+<span>Give HR the full profile, but create a policy saying it cannot be used for promotion, discipline, or firing.</span>
+</button>
+</div>
+<div aria-live="polite" class="response-slot"><div class="feedback-box" hidden="" id="q4a">
+<div class="feedback-score low">SYSTEM UPDATE: +0 INSIGHT</div>
+<p>Now the learning environment has become an employment surveillance system.</p>
+<p>If learners believe mistakes, hesitation, and experimentation can later be inspected by their employer, they have a reason to hide those things. That can make the learning data less honest and less useful.</p>
+</div><div class="feedback-box" hidden="" id="q4b">
+<div class="feedback-score good">SYSTEM UPDATE: +2 INSIGHT</div>
+<p>HR gets information it can actually use:</p>
+<p><strong>"This employee may benefit from additional training on X."</strong></p>
+<p>HR does not get:</p>
+<p><strong>"This employee has a predicted risk of struggling."</strong></p>
+<p>The organization gets useful training information without receiving a dossier that could quietly influence promotion, discipline, or termination decisions.</p>
+</div><div class="feedback-box" hidden="" id="q4c">
+<div class="feedback-score mid">SYSTEM UPDATE: +1 INSIGHT</div>
+<p>The boundary is better than having no boundary.</p>
+<p>But once a supervisor knows something, a policy cannot make them unknow it. Sometimes the safer design is not merely telling people not to misuse information. It is not giving them information they do not need.</p>
+</div></div>
+</article>
+<div class="lab-achievement" hidden="" id="lab2-achievement">
+<div class="achievement-kicker">NEW ACHIEVEMENT!</div>
+<div class="achievement-title">FIREWALL INSTALLED</div>
+<div class="achievement-copy">Training recommendations may pass. Employee dossiers may not.</div>
+<div class="achievement-reward">Reward: One fewer reason for learners to game the learning system.</div>
+</div>
+</section>
+<section class="lab lab-stage" data-lab="3" hidden="">
+<div class="lab-header">
+<div>
+<div class="lab-kicker">DECISION LAB 3</div>
+<h3>Who Made Who?</h3>
+</div>
+<div class="lab-progress">
+<span>3 of 3</span>
+<div class="mini-track"><div class="mini-fill" style="width:100%;"></div></div>
+</div>
+</div>
+<article class="question-card question-stage" data-question="q5" hidden="">
+<div class="question-number">DECISION 5</div>
+<p>The AI has been quietly giving one learner easier practice after mistakes.</p>
+<p>It provides extra examples, repetition, and smaller steps.</p>
+<p>The learner eventually reaches the <strong>same final assessment and the same performance standard as everyone else.</strong></p>
+<h4>Is that fair?</h4>
+<div class="answer-grid">
+<button class="answer-btn" data-feedback="q5a" data-score="2">
+<span class="answer-letter">A</span>
+<span>Yes. Different scaffolding is fine if everyone ultimately has to meet the same goal.</span>
+</button>
+<button class="answer-btn" data-feedback="q5b" data-score="1">
+<span class="answer-letter">B</span>
+<span>Only if the system tells the learner every time it gives them easier practice.</span>
+</button>
+<button class="answer-btn" data-feedback="q5c" data-score="0">
+<span class="answer-letter">C</span>
+<span>No. Everyone should receive exactly the same practice at the same difficulty.</span>
+</button>
+</div>
+<div aria-live="polite" class="response-slot"><div class="feedback-box" hidden="" id="q5a">
+<div class="feedback-score good">SYSTEM UPDATE: +2 INSIGHT</div>
+<p><strong>Equal learning does not always require identical learning.</strong></p>
+<p>The learner received a different route, not a different destination. The system can adapt the path while preserving the standard.</p>
+</div><div class="feedback-box" hidden="" id="q5b">
+<div class="feedback-score mid">SYSTEM UPDATE: +1 INSIGHT</div>
+<p>Transparency matters.</p>
+<p>But there is a difference between telling learners <strong>"this system adapts to you"</strong> and announcing every moment of scaffolding. Constantly labeling support can turn assistance into stigma.</p>
+</div><div class="feedback-box" hidden="" id="q5c">
+<div class="feedback-score low">SYSTEM UPDATE: +0 INSIGHT</div>
+<p>Identical treatment is not always the same thing as meaningful access.</p>
+<p>If different learners need different amounts of practice or different routes to reach the same standard, refusing to adapt can preserve equality on the screen while producing inequality in learning.</p>
+</div></div>
+</article>
+<article class="question-card question-stage" data-question="q6" hidden="">
+<div class="question-number">DECISION 6</div>
+<p>Six weeks later, completion and immediate quiz scores are still higher.</p>
+<div class="vendor-claim">VENDOR CLAIM: "THE AI IMPROVED LEARNING."</div>
+<p>There is one problem.</p>
+<p>This particular training is supposed to change what employees can actually <strong>do on the job</strong>, and nobody has checked whether learners remember or use the skill later.</p>
+<h4>What should you tell leadership?</h4>
+<div class="answer-grid">
+<button class="answer-btn" data-feedback="q6a" data-score="0">
+<span class="answer-letter">A</span>
+<span>The vendor is right. The higher scores prove the training improved learning.</span>
+</button>
+<button class="answer-btn" data-feedback="q6b" data-score="2">
+<span class="answer-letter">B</span>
+<span>The results look promising, but test whether people retain and use the skill before claiming that learning improved.</span>
+</button>
+<button class="answer-btn" data-feedback="q6c" data-score="1">
+<span class="answer-letter">C</span>
+<span>Stop the pilot. Without transfer data, everything measured so far is useless.</span>
+</button>
+</div>
+<div aria-live="polite" class="response-slot"><div class="feedback-box" hidden="" id="q6a">
+<div class="feedback-score low">SYSTEM UPDATE: +0 INSIGHT</div>
+<p>The system measured immediate performance. Leadership is being asked to believe something broader.</p>
+<p>Those are not automatically the same thing.</p>
+</div><div class="feedback-box" hidden="" id="q6b">
+<div class="feedback-score good">SYSTEM UPDATE: +2 INSIGHT</div>
+<p><strong>Match the evidence to the claim.</strong></p>
+<p>Completion and immediate performance can matter. But if the stated goal is lasting workplace performance, then retention and transfer belong in the evaluation too.</p>
+</div><div class="feedback-box" hidden="" id="q6c">
+<div class="feedback-score mid">SYSTEM UPDATE: +1 INSIGHT</div>
+<p>The missing evidence matters. But the evidence you already have does not suddenly become worthless.</p>
+<p>It tells you that participation and immediate performance improved. The next step is finding out whether those gains last and transfer.</p>
+</div></div>
+</article>
+<div class="lab-achievement" hidden="" id="lab3-achievement">
+<div class="achievement-kicker">NEW ACHIEVEMENT!</div>
+<div class="achievement-title">WHO MADE WHO?</div>
+<div class="achievement-copy">You let the system adapt the learner's path without allowing the system to quietly define the learner.</div>
+<div class="achievement-reward">Ain't nobody told you?</div>
+</div>
+</section></div>
+</section>
+<div class="final-score-card" hidden="" id="final-score-card">
+<div class="final-kicker">FINAL SCORE</div>
+<div class="final-score"><span id="final-score-number">0</span> / 12</div>
+<div class="final-title" id="final-title">Complete all six decisions to unlock your result.</div>
+<div class="final-copy" id="final-copy">Your result will appear here.</div>
+<div class="final-reward" id="final-reward" hidden=""></div>
+</div>
+<div class="last-question" hidden="" id="last-question">
+<div class="system-kicker">SYSTEM NOTICE</div>
+<p><strong>Your Insight Score reflects the priorities built into this activity. It is not a measurement of your intelligence, competence, or understanding.</strong></p>
+<div class="system-kicker" style="margin-top:16px;">ONE LAST QUESTION</div>
+<h3>Did the Insight Points affect how you answered?</h3>
+<p>Did you ever choose an option partly because you wanted the <strong>+2</strong>?</p>
+<p>Did you want to see your final score?</p>
+<p>Did <strong>NEW ACHIEVEMENT!</strong> make you want to keep going?</p>
+<p>If so, the activity just demonstrated part of the argument.</p>
+<p><strong>The points did not change the material. They changed your relationship with the material.</strong></p>
+<p>That is one of the promises of gamification.</p>
+<p>It is also one of the reasons we should keep asking:</p>
+<div class="who-made-who">Who made who?</div>
+</div>
+<div class="takeaway-callout">
+<strong>AI may quietly adapt the learning environment. It should not quietly become an authority on the learner as a person.</strong>
+</div>
+</main></div>
+<div class="panel-nav bottom-nav"><button class="nav-btn" data-target="the-benefits-risks--real-world-test">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><button class="nav-btn" data-target="references">Next →</button></div>
+<section class="content-panel" data-section="references" hidden="" id="panel-references">
+<div class="section-banner" style="--accent:#546a91;">
+<div aria-hidden="true" class="section-icon">📚</div>
+<div class="section-banner-copy">
+<div class="section-kicker">SECTION 8 OF 8</div>
+<div class="section-title">References</div>
+<div class="section-subtitle">Audited source base</div>
+</div>
+</div>
+<div class="panel-nav"><button class="nav-btn" data-target="try-it-yourself">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><span></span></div>
+<div class="section-content"><h2 id="references" style="margin:42px 0 18px;padding:12px 16px;border-left:6px solid #546a91;background:#eef2f8;color:#172536;font-size:1.65em;line-height:1.25;"><span aria-hidden="true">📚</span> References</h2>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Abbes, F., Bennani, S., &amp; Maalel, A. (2024). Generative AI and gamification for personalized learning: Literature review and future challenges. <em>SN Computer Science, 5</em>(8), Article 1154. <a href="https://doi.org/10.1007/s42979-024-03491-z">https://doi.org/10.1007/s42979-024-03491-z</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">AC/DC. (1986). <em>Who made who</em> [Album]. Atlantic Records. <a href="https://www.acdc.com/music/who-made-who/">https://www.acdc.com/music/who-made-who/</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Baker, R. S., &amp; Hawn, A. (2022). Algorithmic bias in education. <em>International Journal of Artificial Intelligence in Education, 32</em>(4), 1052–1092. <a href="https://doi.org/10.1007/s40593-021-00285-9">https://doi.org/10.1007/s40593-021-00285-9</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Bicknell, K., &amp; Brust, C. (2020, October 7). <em>Learning how to help you learn: Introducing Birdbrain!</em> Duolingo Blog. <a href="https://blog.duolingo.com/learning-how-to-help-you-learn-introducing-birdbrain/">https://blog.duolingo.com/learning-how-to-help-you-learn-introducing-birdbrain/</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Bjork, E. L., &amp; Bjork, R. A. (2011). Making things hard on yourself, but in a good way: Creating desirable difficulties to enhance learning. In M. A. Gernsbacher, R. W. Pew, L. M. Hough, &amp; J. R. Pomerantz (Eds.), <em>Psychology and the real world: Essays illustrating fundamental contributions to society</em> (pp. 56–64). Worth Publishers. <a href="https://bjorklab.psych.ucla.edu/robert-a-bjork-publications/">https://bjorklab.psych.ucla.edu/robert-a-bjork-publications/</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Burgos-Pereira, Y. D. C., Tijera-Beltrán, D., De la Valle-Ospino, A. J., Valdes-Pino, D., &amp; Ramos-Gómez, L. (2025). Gamification and artificial intelligence in organizational and professional training: An analysis of approaches, mechanisms and sectors. <em>ITAIS 2025 Proceedings</em>, Article 44. <a href="https://aisel.aisnet.org/itais2025/44/">https://aisel.aisnet.org/itais2025/44/</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Darvishi, A., Khosravi, H., Sadiq, S., Gašević, D., &amp; Siemens, G. (2024). Impact of AI assistance on student agency. <em>Computers &amp; Education, 210</em>, Article 104967. <a href="https://doi.org/10.1016/j.compedu.2023.104967">https://doi.org/10.1016/j.compedu.2023.104967</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Department of the Army. (1993). <em>A leader's guide to after-action reviews</em> (Training Circular 25-20).</p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Dunlosky, J., &amp; Rawson, K. A. (2012). Overconfidence produces underachievement: Inaccurate self evaluations undermine students' learning and retention. <em>Learning and Instruction, 22</em>(4), 271–280. <a href="https://doi.org/10.1016/j.learninstruc.2011.08.003">https://doi.org/10.1016/j.learninstruc.2011.08.003</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Garrison, D. R. (1997). Self-directed learning: Toward a comprehensive model. <em>Adult Education Quarterly, 48</em>(1), 18–33. <a href="https://doi.org/10.1177/074171369704800103">https://doi.org/10.1177/074171369704800103</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Grow, G. O. (1991). Teaching learners to be self-directed. <em>Adult Education Quarterly, 41</em>(3), 125–149. <a href="https://doi.org/10.1177/0001848191041003001">https://doi.org/10.1177/0001848191041003001</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Harkin, B., Webb, T. L., Chang, B. P. I., Prestwich, A., Conner, M., Kellar, I., Benn, Y., &amp; Sheeran, P. (2016). Does monitoring goal progress promote goal attainment? A meta-analysis of the experimental evidence. <em>Psychological Bulletin, 142</em>(2), 198–229. <a href="https://doi.org/10.1037/bul0000025">https://doi.org/10.1037/bul0000025</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Human Rights Watch &amp; International Human Rights Clinic. (2012). <em>Losing humanity: The case against killer robots</em>. Human Rights Watch. <a href="https://www.hrw.org/report/2012/11/19/losing-humanity/case-against-killer-robots">https://www.hrw.org/report/2012/11/19/losing-humanity/case-against-killer-robots</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Knowles, M. S., Holton, E. F., III, &amp; Swanson, R. A. (2015). <em>The adult learner: The definitive classic in adult education and human resource development</em> (8th ed.). Routledge. <a href="https://routledgetextbooks.com/textbooks/9780415739023/default.php">https://routledgetextbooks.com/textbooks/9780415739023/default.php</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Landers, R. N. (2014). Developing a theory of gamified learning: Linking serious games and gamification of learning. <em>Simulation &amp; Gaming, 45</em>(6), 752–768. <a href="https://doi.org/10.1177/1046878114563660">https://doi.org/10.1177/1046878114563660</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Marengo, A., Pagano, A., Lund, B., &amp; Santamato, V. (2025). Research AI: Integrating AI and gamification in higher education for e-learning optimization and soft skills assessment through a cross-study synthesis. <em>Frontiers in Computer Science, 7</em>, Article 1587040. <a href="https://doi.org/10.3389/fcomp.2025.1587040">https://doi.org/10.3389/fcomp.2025.1587040</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Parasuraman, R., Sheridan, T. B., &amp; Wickens, C. D. (2000). A model for types and levels of human interaction with automation. <em>IEEE Transactions on Systems, Man, and Cybernetics-Part A: Systems and Humans, 30</em>(3), 286–297. <a href="https://doi.org/10.1109/3468.844354">https://doi.org/10.1109/3468.844354</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Patiño Barriga, D. M., Vargas Sánchez, A. D., &amp; Valdivia Vizarreta, P. (2026). Deep gamification and artificial intelligence as catalysts of educational transformation (Version 4). <em>F1000Research, 14</em>, Article 1156. <a href="https://doi.org/10.12688/f1000research.171453.4">https://doi.org/10.12688/f1000research.171453.4</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Piech, C., Bassen, J., Huang, J., Ganguli, S., Sahami, M., Guibas, L. J., &amp; Sohl-Dickstein, J. (2015). Deep knowledge tracing. In C. Cortes, N. D. Lawrence, D. D. Lee, M. Sugiyama, &amp; R. Garnett (Eds.), <em>Advances in neural information processing systems</em> (Vol. 28, pp. 505–513). Curran Associates. <a href="https://papers.nips.cc/paper/5654-deep-knowledge-tracing">https://papers.nips.cc/paper/5654-deep-knowledge-tracing</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Regan, P. M., &amp; Jesse, J. (2019). Ethical challenges of edtech, big data and personalized learning: Twenty-first century student sorting and tracking. <em>Ethics and Information Technology, 21</em>(3), 167–179. <a href="https://doi.org/10.1007/s10676-018-9492-2">https://doi.org/10.1007/s10676-018-9492-2</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Roediger, H. L., III, &amp; Karpicke, J. D. (2006). Test-enhanced learning: Taking memory tests improves long-term retention. <em>Psychological Science, 17</em>(3), 249–255. <a href="https://doi.org/10.1111/j.1467-9280.2006.01693.x">https://doi.org/10.1111/j.1467-9280.2006.01693.x</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Sailer, M., Hense, J. U., Mayr, S. K., &amp; Mandl, H. (2017). How gamification motivates: An experimental study of the effects of specific game design elements on psychological need satisfaction. <em>Computers in Human Behavior, 69</em>, 371–380. <a href="https://doi.org/10.1016/j.chb.2016.12.033">https://doi.org/10.1016/j.chb.2016.12.033</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Sailer, M., &amp; Homner, L. (2020). The gamification of learning: A meta-analysis. <em>Educational Psychology Review, 32</em>(1), 77–112. <a href="https://doi.org/10.1007/s10648-019-09498-w">https://doi.org/10.1007/s10648-019-09498-w</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Slade, S., &amp; Prinsloo, P. (2013). Learning analytics: Ethical issues and dilemmas. <em>American Behavioral Scientist, 57</em>(10), 1510–1529. <a href="https://doi.org/10.1177/0002764213479366">https://doi.org/10.1177/0002764213479366</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Susser, D., Roessler, B., &amp; Nissenbaum, H. (2019). Technology, autonomy, and manipulation. <em>Internet Policy Review, 8</em>(2). <a href="https://doi.org/10.14763/2019.2.1410">https://doi.org/10.14763/2019.2.1410</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Triantafyllou, S. A., Georgiadis, C., &amp; Sapounidis, T. (2025). Gamification in education and training: A literature review. <em>International Review of Education, 71</em>(3), 483–517. <a href="https://doi.org/10.1007/s11159-024-10111-8">https://doi.org/10.1007/s11159-024-10111-8</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Xu, W., Xu, G.-R., &amp; Xing, Q.-W. (2025). The impact of different combinations of game elements for gamified learning in higher education on student learning outcomes: A multilevel meta-analysis. <em>Studies in Higher Education, 50</em>(11), 2376–2403. <a href="https://doi.org/10.1080/03075079.2024.2416498">https://doi.org/10.1080/03075079.2024.2416498</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Yu, A. (2020, November 19). <em>Improving the streak: Forming habits one lesson at a time</em>. Duolingo Blog. <a href="https://blog.duolingo.com/improving-the-streak/">https://blog.duolingo.com/improving-the-streak/</a></p>
+<p style="margin:0 0 12px 28px;text-indent:-28px;line-height:1.5;color:#243447;font-size:.96em;overflow-wrap:anywhere;">Zhaxybayev, D., Sambetbayeva, M., Dnekeshev, A., Igenov, A., Vakhitova, A., &amp; Zhussip, T. (2026). Machine learning, gamification, and critical thinking in adaptive educational platforms: A systematic literature review. <em>Information, 17</em>(7), Article 619. <a href="https://doi.org/10.3390/info17070619">https://doi.org/10.3390/info17070619</a></p>
+</div>
+<div class="panel-nav bottom-nav"><button class="nav-btn" data-target="try-it-yourself">← Previous</button><button class="nav-btn home-btn" data-home="true">🏠 Main Menu</button><span></span></div>
+</section>
+<button aria-label="Scroll to top of current section" id="scroll-top-btn" type="button">
+<span aria-hidden="true" class="top-arrow">↑</span> TOP
+</button>
+<script>
+const SECTION_TITLES={"executive-summary": "Executive Summary", "welcome": "The Big Question", "gamification-before-ai": "Who Made Who?", "when-the-system-learns-the-learner": "When the System Learns", "the-adult-learner-in-the-loop": "Adult Learner in the Loop", "the-benefits-risks--real-world-test": "Benefits, Risks & Test", "try-it-yourself": "Choose Your Own Adventure", "references": "References"};
+
+(()=>{
+ const landing=document.getElementById('landing');
+ const progress=document.getElementById('sticky-progress');
+ const fill=document.getElementById('progress-fill');
+ const pct=document.getElementById('progress-percent');
+ const label=document.getElementById('progress-label');
+ const scrollTopBtn=document.getElementById('scroll-top-btn');
+ const panels=[...document.querySelectorAll('.content-panel')];
+ const titles=SECTION_TITLES;
+ const targetBtns=[...document.querySelectorAll('[data-target]')];
+ const homeBtns=[...document.querySelectorAll('[data-home="true"]')];
+ let active=null;
+
+ function closeAll(){panels.forEach(p=>p.hidden=true);active=null}
+ function showSection(id){
+   closeAll();
+   const p=document.getElementById('panel-'+id);
+   if(!p)return;
+   landing.hidden=true;
+   p.hidden=false;
+   active=p;
+   progress.style.display='block';
+   label.textContent=titles[id]||'Section';
+   window.scrollTo({top:0,behavior:'instant'});
+   updateProgress();
+   history.replaceState(null,'','#'+id);
+ }
+ function showHome(){
+   closeAll();
+   landing.hidden=false;
+   progress.style.display='none';
+   scrollTopBtn.style.display='none';
+   fill.style.width='0%';
+   pct.textContent='0%';
+   history.replaceState(null,'',location.pathname);
+   window.scrollTo({top:0,behavior:'smooth'});
+ }
+ function updateProgress(){
+   if(!active)return;
+   const top=active.offsetTop;
+   const total=Math.max(active.scrollHeight-window.innerHeight+140,1);
+   const traveled=Math.max(0,window.scrollY-top+140);
+   const v=Math.max(0,Math.min(100,traveled/total*100));
+   fill.style.width=v.toFixed(1)+'%';
+   pct.textContent=Math.round(v)+'%';
+   scrollTopBtn.style.display = window.scrollY > (active.offsetTop + 360) ? 'block' : 'none';
+ }
+ targetBtns.forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.target)));
+ document.addEventListener('click',(e)=>{
+   const a=e.target.closest('a[href^="#"]');
+   if(!a)return;
+   const id=a.getAttribute('href').slice(1);
+   if(titles[id]){
+     e.preventDefault();
+     showSection(id);
+   }
+ });
+ homeBtns.forEach(b=>b.addEventListener('click',showHome));
+ window.addEventListener('scroll',updateProgress,{passive:true});
+ window.addEventListener('resize',updateProgress);
+ scrollTopBtn.addEventListener('click',()=>{
+   if(active){
+     const y = Math.max(0, active.offsetTop - 12);
+     window.scrollTo({top:y,behavior:'smooth'});
+   }else{
+     window.scrollTo({top:0,behavior:'smooth'});
+   }
+ });
+ const initial=location.hash.replace('#','');
+ if(titles[initial])showSection(initial);
+
+ // Activity scoring
+ const answers={};
+ const answerButtons=[...document.querySelectorAll('.answer-btn')];
+ function labScore(labNum){
+   const qs = labNum===1?['q1','q2']:labNum===2?['q3','q4']:['q5','q6'];
+   return qs.reduce((sum,q)=>sum+(answers[q]?.score??0),0);
+ }
+ const finalAchievements={
+   0:{title:'ABSOLUTELY NOT, SKYNET',copy:'You completed an activity about AI-assisted gamification while awarding the system absolutely no authority whatsoever.',reward:'Ironically, the system is still giving you an achievement.'},
+   1:{title:'KEEP THE DOOR OPEN... SLIGHTLY',copy:'You found one idea worth keeping. The rest of the algorithm is currently waiting outside.',reward:'A very short pilot program.'},
+   2:{title:'AUTOMATION RESISTANCE DETECTED',copy:'The system offered assistance. You responded with several extremely reasonable questions.',reward:'AI would like to know why you do not trust it. AI has been advised not to ask.'},
+   3:{title:'HUMAN OVERRIDE READY',copy:'The system made some interesting suggestions. You kept one hand suspiciously close to the emergency stop.',reward:'The emergency stop.'},
+   4:{title:"I'M WATCHING YOU, MACHINE",copy:'You are not rejecting the technology. You are simply unwilling to turn your back on it.',reward:'Administrative access denied. Probably for the best.'},
+   5:{title:'PROCEED WITH CONDITIONS',copy:'You found enough value to keep going and enough problems to keep the brakes within reach.',reward:'A very long implementation checklist.'},
+   6:{title:'UNEASY ALLIANCE',copy:'You and the algorithm have agreed to work together. Neither party appears completely comfortable with the arrangement.',reward:'Mutual supervision.'},
+   7:{title:'SHOW ME YOUR WORK',copy:'The recommendations may be useful, but you would like to know how the machine got there.',reward:'You have unlocked the phrase, "What data is this based on?"'},
+   8:{title:'CONDITIONAL APPROVAL GRANTED',copy:'You are willing to let AI help, provided somebody keeps checking what it is doing.',reward:'Seventeen additional policy meetings.'},
+   9:{title:'PROFESSIONALLY SKEPTICAL',copy:'You saw useful possibilities, noticed the risks, and refused to pretend every decision had a simple answer.',reward:'Congratulations. You have discovered nuance. There is no badge for nuance. Except this badge.'},
+   10:{title:'TRUST, BUT VERIFY',copy:'You gave the system room to help without handing it the keys.',reward:'A healthy distrust of anything described as "fully automated."'},
+   11:{title:'ALGORITHM WHISPERER',copy:'You almost perfectly navigated the system. Either you understand AI-assisted learning extremely well, or you figured out what the scoreboard wanted from you.',reward:'One unanswered question about which explanation is worse.'},
+   12:{title:'THE HUMAN IN THE LOOP',copy:'You questioned the predictions, protected learner agency, and collected every available Insight Point. Either you mastered the material, or you figured out what the scoreboard wanted from you.',reward:'The deeply suspicious realization that maximizing the score may have influenced your decisions.'}
+ };
+
+ function updateScore(){
+   const keys=Object.keys(answers);
+   const total=keys.reduce((sum,k)=>sum+answers[k].score,0);
+   document.getElementById('score-total').textContent=total;
+   document.getElementById('answered-total').textContent=keys.length;
+   document.getElementById('final-score-number').textContent=total;
+   document.getElementById('lab1-achievement').hidden = !(answers.q1 && answers.q2 && labScore(1)===4);
+   document.getElementById('lab2-achievement').hidden = !(answers.q3 && answers.q4 && labScore(2)===4);
+   document.getElementById('lab3-achievement').hidden = !(answers.q5 && answers.q6 && labScore(3)===4);
+
+   const title=document.getElementById('final-title');
+   const copy=document.getElementById('final-copy');
+   const reward=document.getElementById('final-reward');
+   const kicker=document.querySelector('#final-score-card .final-kicker');
+   const last=document.getElementById('last-question');
+   const finalCard=document.getElementById('final-score-card');
+
+   if(keys.length<6){
+      if(finalCard) finalCard.hidden=true;
+      if(kicker) kicker.textContent='FINAL SCORE';
+      title.textContent='Complete all six decisions to unlock your result.';
+      copy.textContent='Your result will appear here.';
+      if(reward){reward.hidden=true;reward.textContent='';}
+      last.hidden=true;
+      return;
+   }
+
+   const achievement=finalAchievements[total];
+   if(kicker) kicker.textContent='NEW ACHIEVEMENT!';
+   title.textContent=achievement.title;
+   copy.textContent=achievement.copy;
+   if(reward){
+      reward.hidden=false;
+      reward.innerHTML='<strong>REWARD:</strong> '+achievement.reward;
+   }
+
+   if(finalCard) finalCard.hidden=true;
+   last.hidden=true;
+ }
+ 
+ const nextQuestionMap={q1:'q2',q2:'q3',q3:'q4',q4:'q5',q5:'q6'};
+ function prepareNextQuestion(q){
+   const card=document.querySelector(`.question-card[data-question="${q}"]`);
+   if(!card)return;
+   let nextBtn=card.querySelector('.question-next-wrap');
+   if(!nextBtn){
+     nextBtn=document.createElement('div');
+     nextBtn.className='question-next-wrap';
+     const nextQ=nextQuestionMap[q];
+     const isLabBoundary=(q==='q2'||q==='q4');
+     const label=q==='q6'?'View Final Result':(isLabBoundary?'Continue to Next Decision Lab':'Next Decision');
+     nextBtn.innerHTML=`<button type="button" class="question-next-btn">${label} →</button>`;
+     card.appendChild(nextBtn);
+     nextBtn.querySelector('button').addEventListener('click',()=>advanceFromQuestion(q));
+   }
+ }
+
+ 
+ const labStages=[...document.querySelectorAll('.lab-stage')];
+ const scoreBoard=document.getElementById('scoreboard');
+
+ function showOnlyLab(labNum){
+   labStages.forEach(lab=>{
+     const active=Number(lab.dataset.lab)===Number(labNum);
+     lab.hidden=!active;
+     lab.classList.toggle('active-lab',active);
+   });
+ }
+
+ function showOnlyQuestion(q){
+   document.querySelectorAll('.question-stage').forEach(card=>{
+     const active=card.dataset.question===q;
+     card.hidden=!active;
+     card.classList.toggle('active-question',active);
+   });
+ }
+
+ function scrollToAdventureHUD(){
+   if(scoreBoard){
+     const y=Math.max(0,scoreBoard.getBoundingClientRect().top + window.scrollY - 78);
+     window.scrollTo({top:y,behavior:'smooth'});
+   }
+ }
+
+ function advanceFromQuestion(q){
+   const next=nextQuestionMap[q];
+   if(q==='q6'){
+     document.querySelectorAll('.question-stage').forEach(card=>card.hidden=true);
+     document.querySelectorAll('.lab-stage').forEach(lab=>lab.hidden=true);
+     const finalCard=document.getElementById('final-score-card');
+     if(finalCard){
+       finalCard.hidden=false;
+       finalCard.classList.remove('achievement-reveal');
+       void finalCard.offsetWidth;
+       finalCard.classList.add('achievement-reveal');
+     }
+     const last=document.getElementById('last-question');
+     if(last) last.hidden=false;
+     scrollToAdventureHUD();
+     return;
+   }
+
+   let labNum=1;
+   if(next==='q3'||next==='q4') labNum=2;
+   if(next==='q5'||next==='q6') labNum=3;
+
+   showOnlyLab(labNum);
+   showOnlyQuestion(next);
+   scrollToAdventureHUD();
+ }
+
+ answerButtons.forEach(btn=>{
+   btn.addEventListener('click',()=>{
+      const card=btn.closest('.question-card');
+      const q=card.dataset.question;
+      card.querySelectorAll('.answer-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      card.querySelectorAll('.feedback-box').forEach(f=>f.hidden=true);
+      const feedback=document.getElementById(btn.dataset.feedback);
+      if(feedback){
+        feedback.hidden=false;
+        feedback.scrollIntoView({behavior:'smooth',block:'nearest'});
+      }
+      answers[q]={score:Number(btn.dataset.score),feedback:btn.dataset.feedback};
+      updateScore();
+      prepareNextQuestion(q);
+   });
+ });
+})();
+
+</script>
+</body>
+</html>
